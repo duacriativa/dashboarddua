@@ -3,908 +3,862 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dua Criativa — Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<title>Dua Criativa — Painel de Produção</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --roxo: #6B21E8;
-    --roxo-light: #8B47F0;
-    --roxo-dark: #4A0FAD;
-    --amarelo: #F5E642;
-    --amarelo-dark: #D4C820;
-    --bg: #0D0A1A;
-    --bg2: #150F2B;
-    --bg3: #1E1638;
-    --border: rgba(107,33,232,0.3);
-    --text: #F0ECFF;
-    --text2: #9B8FC4;
-    --text3: #6B5F8A;
-    --ok: #22C97A;
-    --ok-bg: rgba(34,201,122,0.12);
-    --design: #F5A623;
-    --design-bg: rgba(245,166,35,0.12);
-    --aprovacao: #60A5FA;
-    --aprovacao-bg: rgba(96,165,250,0.12);
-    --planejamento: #F472B6;
-    --planejamento-bg: rgba(244,114,182,0.12);
-    --templates: #6B7280;
-    --templates-bg: rgba(107,114,128,0.12);
-    --danger: #F87171;
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
-
-  /* Background grid */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(107,33,232,0.06) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(107,33,232,0.06) 1px, transparent 1px);
-    background-size: 48px 48px;
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  /* Glow top */
-  body::after {
-    content: '';
-    position: fixed;
-    top: -200px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 800px;
-    height: 400px;
-    background: radial-gradient(ellipse, rgba(107,33,232,0.25) 0%, transparent 70%);
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  .container {
-    position: relative;
-    z-index: 1;
-    max-width: 1800px;
-    margin: 0 auto;
-    padding: 28px 36px;
-  }
-
-  /* HEADER */
-  header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 32px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .logo-area {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-
-  .logo-dot {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background: var(--amarelo);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 0 24px rgba(245,230,66,0.4);
-  }
-
-  .logo-dot svg { width: 22px; height: 22px; }
-
-  .logo-text {
-    font-family: 'Syne', sans-serif;
-    font-size: 22px;
-    font-weight: 800;
-    letter-spacing: -0.02em;
-  }
-
-  .logo-text span { color: var(--amarelo); }
-
-  .header-center {
-    text-align: center;
-  }
-
-  .header-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: .12em;
-    text-transform: uppercase;
-    color: var(--text2);
-  }
-
-  .header-week {
-    font-family: 'Syne', sans-serif;
-    font-size: 18px;
-    font-weight: 700;
-    color: var(--text);
-    margin-top: 2px;
-  }
-
-  .header-right {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-
-  .refresh-info {
-    text-align: right;
-    font-size: 12px;
-    color: var(--text3);
-    line-height: 1.6;
-  }
-
-  .refresh-info strong { color: var(--text2); }
-
-  .refresh-btn {
-    background: var(--roxo);
-    border: none;
-    color: white;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 12px;
-    font-weight: 500;
-    padding: 8px 16px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all .2s;
-    letter-spacing: .03em;
-  }
-
-  .refresh-btn:hover { background: var(--roxo-light); transform: translateY(-1px); }
-  .refresh-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
-
-  /* CONFIG BANNER */
-  #config-banner {
-    background: var(--bg2);
-    border: 1px solid var(--amarelo);
-    border-radius: 12px;
-    padding: 20px 24px;
-    margin-bottom: 28px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-
-  #config-banner .icon {
-    font-size: 24px;
-    flex-shrink: 0;
-  }
-
-  #config-banner .text { flex: 1; }
-  #config-banner .text strong { color: var(--amarelo); font-size: 14px; display: block; margin-bottom: 4px; }
-  #config-banner .text p { font-size: 12px; color: var(--text2); line-height: 1.5; }
-
-  .api-input-row {
-    display: flex;
-    gap: 10px;
-    margin-top: 10px;
-  }
-
-  .api-input {
-    flex: 1;
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    padding: 8px 14px;
-    outline: none;
-    transition: border-color .2s;
-  }
-
-  .api-input:focus { border-color: var(--roxo-light); }
-
-  .api-save-btn {
-    background: var(--amarelo);
-    color: #0D0A1A;
-    border: none;
-    border-radius: 8px;
-    font-family: 'Syne', sans-serif;
-    font-size: 13px;
-    font-weight: 700;
-    padding: 8px 20px;
-    cursor: pointer;
-    transition: all .2s;
-    white-space: nowrap;
-  }
-
-  .api-save-btn:hover { background: var(--amarelo-dark); }
-
-  /* STATS ROW */
-  .stats-row {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
-    margin-bottom: 28px;
-  }
-
-  .stat-card {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 20px 22px;
-    position: relative;
-    overflow: hidden;
-    transition: transform .2s;
-  }
-
-  .stat-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 3px;
-    border-radius: 14px 14px 0 0;
-  }
-
-  .stat-card.green::before { background: var(--ok); }
-  .stat-card.amber::before { background: var(--design); }
-  .stat-card.blue::before { background: var(--aprovacao); }
-  .stat-card.purple::before { background: var(--roxo-light); }
-
-  .stat-num {
-    font-family: 'Syne', sans-serif;
-    font-size: 40px;
-    font-weight: 800;
-    line-height: 1;
-    margin-bottom: 6px;
-  }
-
-  .stat-card.green .stat-num { color: var(--ok); }
-  .stat-card.amber .stat-num { color: var(--design); }
-  .stat-card.blue .stat-num { color: var(--aprovacao); }
-  .stat-card.purple .stat-num { color: var(--amarelo); }
-
-  .stat-label {
-    font-size: 12px;
-    color: var(--text2);
-    text-transform: uppercase;
-    letter-spacing: .08em;
-    font-weight: 500;
-  }
-
-  /* PROGRESS BAR GLOBAL */
-  .global-progress {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 20px 24px;
-    margin-bottom: 28px;
-  }
-
-  .progress-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 12px;
-  }
-
-  .progress-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    color: var(--text2);
-  }
-
-  .progress-pct {
-    font-family: 'Syne', sans-serif;
-    font-size: 22px;
-    font-weight: 800;
-    color: var(--amarelo);
-  }
-
-  .progress-track {
-    height: 10px;
-    background: var(--bg3);
-    border-radius: 10px;
-    overflow: hidden;
-  }
-
-  .progress-fill {
-    height: 100%;
-    border-radius: 10px;
-    background: linear-gradient(90deg, var(--roxo), var(--amarelo));
-    transition: width 1s ease;
-  }
-
-  /* MAIN GRID */
-  .main-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-  }
-
-  /* CLIENT CARDS */
-  .client-card {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 18px 20px;
-    transition: border-color .2s;
-  }
-
-  .client-card:hover { border-color: rgba(107,33,232,0.6); }
-
-  .client-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 14px;
-  }
-
-  .client-name {
-    font-family: 'Syne', sans-serif;
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--text);
-  }
-
-  .client-resp {
-    font-size: 11px;
-    color: var(--text3);
-    margin-top: 2px;
-  }
-
-  .client-pct-badge {
-    font-family: 'Syne', sans-serif;
-    font-size: 14px;
-    font-weight: 700;
-    padding: 4px 12px;
-    border-radius: 20px;
-  }
-
-  .pct-100 { background: var(--ok-bg); color: var(--ok); }
-  .pct-high { background: rgba(245,230,66,0.12); color: var(--amarelo); }
-  .pct-mid { background: var(--design-bg); color: var(--design); }
-  .pct-low { background: rgba(248,113,113,0.12); color: var(--danger); }
-
-  .client-mini-bar {
-    height: 4px;
-    background: var(--bg3);
-    border-radius: 4px;
-    overflow: hidden;
-    margin-bottom: 14px;
-  }
-
-  .client-mini-fill {
-    height: 100%;
-    border-radius: 4px;
-    transition: width .8s ease;
-  }
-
-  .fill-100 { background: var(--ok); }
-  .fill-high { background: var(--amarelo); }
-  .fill-mid { background: var(--design); }
-  .fill-low { background: var(--danger); }
-
-  .days-row {
-    display: flex;
-    gap: 5px;
-    flex-wrap: wrap;
-  }
-
-  .day-pill {
-    font-size: 11px;
-    font-weight: 500;
-    padding: 4px 9px;
-    border-radius: 20px;
-    border: 1px solid transparent;
-    white-space: nowrap;
-    letter-spacing: .02em;
-  }
-
-  .d-agendamento { background: var(--ok-bg); color: var(--ok); border-color: rgba(34,201,122,0.3); }
-  .d-design { background: var(--design-bg); color: var(--design); border-color: rgba(245,166,35,0.3); }
-  .d-aprovacao { background: var(--aprovacao-bg); color: var(--aprovacao); border-color: rgba(96,165,250,0.3); }
-  .d-planejamento { background: var(--planejamento-bg); color: var(--planejamento); border-color: rgba(244,114,182,0.3); }
-  .d-templates { background: var(--templates-bg); color: var(--templates); border-color: rgba(107,114,128,0.3); }
-  .d-concluido { background: rgba(34,201,122,0.08); color: #86efac; border-color: rgba(134,239,172,0.2); }
-
-  /* LEGEND */
-  .legend-row {
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-    margin-bottom: 24px;
-  }
-
-  .legend-item {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    font-size: 11px;
-    color: var(--text2);
-    text-transform: uppercase;
-    letter-spacing: .06em;
-    font-weight: 500;
-  }
-
-  .legend-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-  }
-
-  /* LOADING */
-  .loading-state {
-    text-align: center;
-    padding: 60px 20px;
-    color: var(--text2);
-  }
-
-  .spinner {
-    width: 40px;
-    height: 40px;
-    border: 3px solid var(--bg3);
-    border-top-color: var(--roxo-light);
-    border-radius: 50%;
-    animation: spin .8s linear infinite;
-    margin: 0 auto 16px;
-  }
-
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  .loading-text {
-    font-family: 'Syne', sans-serif;
-    font-size: 14px;
-    letter-spacing: .06em;
-  }
-
-  /* FOOTER */
-  footer {
-    margin-top: 28px;
-    padding-top: 16px;
-    border-top: 1px solid var(--border);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 11px;
-    color: var(--text3);
-  }
-
-  .pulse-dot {
-    display: inline-block;
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: var(--ok);
-    margin-right: 6px;
-    animation: pulse 2s ease infinite;
-  }
-
-  @keyframes pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: .5; transform: scale(.8); }
-  }
-
-  /* Error */
-  .error-state {
-    background: rgba(248,113,113,0.08);
-    border: 1px solid rgba(248,113,113,0.3);
-    border-radius: 10px;
-    padding: 16px 20px;
-    color: var(--danger);
-    font-size: 13px;
-    margin-bottom: 20px;
-  }
-
-  /* Scrollbar */
-  ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: var(--bg); }
-  ::-webkit-scrollbar-thumb { background: var(--bg3); border-radius: 3px; }
+:root {
+  --preto: #0A0A0A;
+  --preto2: #111111;
+  --preto3: #1A1A1A;
+  --preto4: #222222;
+  --roxo: #7C3AED;
+  --roxo2: #9F67F5;
+  --amarelo: #F5E642;
+  --amarelo2: #EDD800;
+  --branco: #FFFFFF;
+  --cinza: #999999;
+  --cinza2: #555555;
+  --verde: #22C55E;
+  --laranja: #F97316;
+  --azul: #60A5FA;
+  --rosa: #F472B6;
+  --borda: rgba(255,255,255,0.07);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--preto);
+  color: var(--branco);
+  font-family: 'Space Grotesk', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* GRAIN TEXTURE */
+body::before {
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events:none;
+  z-index:0;
+  opacity:.4;
+}
+
+.wrap {
+  position:relative;
+  z-index:1;
+  max-width:1600px;
+  margin:0 auto;
+  padding:24px 28px;
+}
+
+/* ── HEADER ── */
+header {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:28px;
+  gap:12px;
+  flex-wrap:wrap;
+}
+
+.logo {
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.logo-mark {
+  font-family:'Bebas Neue', sans-serif;
+  font-size:32px;
+  letter-spacing:.04em;
+  line-height:1;
+  color:var(--branco);
+}
+
+.logo-mark span {
+  color:var(--amarelo);
+}
+
+.logo-sub {
+  font-size:10px;
+  color:var(--cinza);
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  line-height:1.4;
+  border-left:1px solid var(--cinza2);
+  padding-left:12px;
+  margin-left:4px;
+}
+
+.header-center {
+  text-align:center;
+  flex:1;
+}
+
+.painel-label {
+  font-size:10px;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--cinza);
+  margin-bottom:3px;
+}
+
+.semana-label {
+  font-family:'Bebas Neue', sans-serif;
+  font-size:22px;
+  letter-spacing:.06em;
+  color:var(--branco);
+}
+
+.header-right {
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.update-info {
+  text-align:right;
+  font-size:11px;
+  color:var(--cinza);
+  line-height:1.7;
+}
+
+.update-info strong {
+  color:var(--branco);
+}
+
+.btn-refresh {
+  background:var(--amarelo);
+  color:var(--preto);
+  border:none;
+  font-family:'Space Grotesk', sans-serif;
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  padding:10px 18px;
+  border-radius:6px;
+  cursor:pointer;
+  transition:all .2s;
+  white-space:nowrap;
+}
+
+.btn-refresh:hover { background:var(--amarelo2); transform:translateY(-1px); }
+.btn-refresh:disabled { opacity:.4; cursor:not-allowed; transform:none; }
+
+/* ── CONFIG BANNER ── */
+#config-banner {
+  background:var(--preto3);
+  border:1px solid var(--amarelo);
+  border-radius:10px;
+  padding:20px 24px;
+  margin-bottom:24px;
+  display:flex;
+  gap:16px;
+  align-items:flex-start;
+}
+
+.banner-icon {
+  font-size:22px;
+  flex-shrink:0;
+  margin-top:2px;
+}
+
+.banner-text strong {
+  display:block;
+  color:var(--amarelo);
+  font-size:14px;
+  font-weight:600;
+  margin-bottom:4px;
+}
+
+.banner-text p {
+  font-size:12px;
+  color:var(--cinza);
+  line-height:1.6;
+  margin-bottom:10px;
+}
+
+.api-row {
+  display:flex;
+  gap:8px;
+}
+
+.api-input {
+  flex:1;
+  background:var(--preto4);
+  border:1px solid var(--cinza2);
+  border-radius:6px;
+  color:var(--branco);
+  font-family:'Space Grotesk', sans-serif;
+  font-size:13px;
+  padding:9px 14px;
+  outline:none;
+  transition:border-color .2s;
+  min-width:0;
+}
+
+.api-input:focus { border-color:var(--amarelo); }
+
+.btn-salvar {
+  background:var(--amarelo);
+  color:var(--preto);
+  border:none;
+  border-radius:6px;
+  font-family:'Space Grotesk', sans-serif;
+  font-size:12px;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+  padding:9px 18px;
+  cursor:pointer;
+  white-space:nowrap;
+  transition:background .2s;
+}
+
+.btn-salvar:hover { background:var(--amarelo2); }
+
+/* ── ERROR ── */
+#error-box {
+  background:rgba(239,68,68,0.08);
+  border:1px solid rgba(239,68,68,0.3);
+  border-radius:8px;
+  padding:14px 18px;
+  color:#FCA5A5;
+  font-size:13px;
+  margin-bottom:20px;
+}
+
+/* ── LOADING ── */
+#loading-state {
+  text-align:center;
+  padding:80px 20px;
+}
+
+.spinner {
+  width:36px;
+  height:36px;
+  border:3px solid var(--preto4);
+  border-top-color:var(--amarelo);
+  border-radius:50%;
+  animation:spin .7s linear infinite;
+  margin:0 auto 14px;
+}
+
+@keyframes spin { to { transform:rotate(360deg); } }
+
+.loading-label {
+  font-size:13px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--cinza);
+}
+
+/* ── STATS ── */
+.stats-grid {
+  display:grid;
+  grid-template-columns:repeat(4, 1fr);
+  gap:12px;
+  margin-bottom:16px;
+}
+
+.stat {
+  background:var(--preto2);
+  border:1px solid var(--borda);
+  border-radius:10px;
+  padding:18px 20px;
+  position:relative;
+  overflow:hidden;
+}
+
+.stat::after {
+  content:'';
+  position:absolute;
+  top:0; left:0; right:0;
+  height:2px;
+  border-radius:10px 10px 0 0;
+}
+
+.stat.verde::after { background:var(--verde); }
+.stat.laranja::after { background:var(--laranja); }
+.stat.azul::after { background:var(--azul); }
+.stat.amarelo::after { background:var(--amarelo); }
+
+.stat-num {
+  font-family:'Bebas Neue', sans-serif;
+  font-size:46px;
+  line-height:1;
+  margin-bottom:4px;
+  letter-spacing:.02em;
+}
+
+.stat.verde .stat-num { color:var(--verde); }
+.stat.laranja .stat-num { color:var(--laranja); }
+.stat.azul .stat-num { color:var(--azul); }
+.stat.amarelo .stat-num { color:var(--amarelo); }
+
+.stat-label {
+  font-size:10px;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--cinza);
+  font-weight:500;
+}
+
+/* ── PROGRESS BAR ── */
+.progress-bar {
+  background:var(--preto2);
+  border:1px solid var(--borda);
+  border-radius:10px;
+  padding:16px 20px;
+  margin-bottom:20px;
+  display:flex;
+  align-items:center;
+  gap:16px;
+}
+
+.progress-title {
+  font-size:10px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--cinza);
+  white-space:nowrap;
+  font-weight:500;
+}
+
+.progress-track {
+  flex:1;
+  height:8px;
+  background:var(--preto4);
+  border-radius:8px;
+  overflow:hidden;
+}
+
+.progress-fill {
+  height:100%;
+  border-radius:8px;
+  background:linear-gradient(90deg, var(--roxo), var(--amarelo));
+  transition:width 1s ease;
+}
+
+.progress-pct {
+  font-family:'Bebas Neue', sans-serif;
+  font-size:26px;
+  letter-spacing:.04em;
+  color:var(--amarelo);
+  white-space:nowrap;
+}
+
+/* ── LEGEND ── */
+.legend {
+  display:flex;
+  gap:16px;
+  flex-wrap:wrap;
+  margin-bottom:20px;
+}
+
+.leg {
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-size:10px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--cinza);
+  font-weight:500;
+}
+
+.leg-dot {
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  flex-shrink:0;
+}
+
+/* ── CLIENT GRID ── */
+.client-grid {
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:12px;
+}
+
+.client-card {
+  background:var(--preto2);
+  border:1px solid var(--borda);
+  border-radius:10px;
+  padding:16px 18px;
+  transition:border-color .2s;
+}
+
+.client-card:hover { border-color:rgba(255,255,255,0.15); }
+
+.card-head {
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  margin-bottom:12px;
+  gap:8px;
+}
+
+.card-nome {
+  font-weight:700;
+  font-size:14px;
+  color:var(--branco);
+  line-height:1.3;
+}
+
+.card-resp {
+  font-size:11px;
+  color:var(--cinza);
+  margin-top:2px;
+}
+
+.pct-badge {
+  font-family:'Bebas Neue', sans-serif;
+  font-size:18px;
+  letter-spacing:.04em;
+  padding:2px 10px;
+  border-radius:20px;
+  white-space:nowrap;
+  flex-shrink:0;
+}
+
+.pct-100 { background:rgba(34,197,94,0.12); color:var(--verde); }
+.pct-hi { background:rgba(245,230,66,0.1); color:var(--amarelo); }
+.pct-mid { background:rgba(249,115,22,0.1); color:var(--laranja); }
+.pct-low { background:rgba(239,68,68,0.1); color:#FCA5A5; }
+
+.card-bar {
+  height:3px;
+  background:var(--preto4);
+  border-radius:3px;
+  overflow:hidden;
+  margin-bottom:12px;
+}
+
+.card-bar-fill {
+  height:100%;
+  border-radius:3px;
+  transition:width .8s ease;
+}
+
+.fill-100 { background:var(--verde); }
+.fill-hi { background:var(--amarelo); }
+.fill-mid { background:var(--laranja); }
+.fill-low { background:#EF4444; }
+
+.pills {
+  display:flex;
+  flex-wrap:wrap;
+  gap:5px;
+}
+
+.pill {
+  font-size:10px;
+  font-weight:600;
+  padding:3px 8px;
+  border-radius:4px;
+  letter-spacing:.04em;
+  white-space:nowrap;
+}
+
+.p-ok { background:rgba(34,197,94,0.1); color:#86efac; }
+.p-design { background:rgba(249,115,22,0.1); color:#FDB97D; }
+.p-aprovacao { background:rgba(96,165,250,0.1); color:var(--azul); }
+.p-planejamento { background:rgba(244,114,182,0.1); color:var(--rosa); }
+.p-templates { background:rgba(100,100,100,0.1); color:var(--cinza); }
+
+/* ── FOOTER ── */
+footer {
+  margin-top:24px;
+  padding-top:16px;
+  border-top:1px solid var(--borda);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:8px;
+  font-size:11px;
+  color:var(--cinza2);
+  letter-spacing:.04em;
+}
+
+.pulse {
+  display:inline-block;
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:var(--verde);
+  margin-right:6px;
+  animation:pulse 2s ease infinite;
+  vertical-align:middle;
+}
+
+@keyframes pulse {
+  0%,100%{opacity:1;transform:scale(1)}
+  50%{opacity:.4;transform:scale(.7)}
+}
+
+/* ── RESPONSIVE — MOBILE ── */
+@media (max-width:768px) {
+  .wrap { padding:16px; }
+
+  header { gap:10px; }
+
+  .logo-sub { display:none; }
+
+  .logo-mark { font-size:26px; }
+
+  .semana-label { font-size:17px; }
+
+  .update-info { display:none; }
+
+  .stats-grid { grid-template-columns:repeat(2, 1fr); gap:8px; }
+
+  .stat { padding:14px 16px; }
+
+  .stat-num { font-size:36px; }
+
+  .progress-bar { padding:12px 14px; gap:10px; }
+
+  .progress-pct { font-size:20px; }
+
+  .client-grid { grid-template-columns:1fr; gap:8px; }
+
+  .client-card { padding:14px 16px; }
+
+  .card-nome { font-size:13px; }
+
+  footer { font-size:10px; }
+}
+
+@media (max-width:480px) {
+  .stats-grid { grid-template-columns:repeat(2, 1fr); }
+  .stat-num { font-size:30px; }
+  .progress-bar { flex-wrap:wrap; }
+  .progress-title { width:100%; }
+}
+
+/* ── TV FULL SCREEN ── */
+@media (min-width:1400px) {
+  .wrap { padding:32px 48px; }
+  .logo-mark { font-size:36px; }
+  .semana-label { font-size:26px; }
+  .stat-num { font-size:54px; }
+  .client-grid { grid-template-columns:repeat(4, 1fr); gap:16px; }
+  .card-nome { font-size:15px; }
+  .pill { font-size:11px; padding:4px 10px; }
+}
 </style>
 </head>
 <body>
-<div class="container">
+<div class="wrap">
 
   <!-- HEADER -->
   <header>
-    <div class="logo-area">
-      <div class="logo-dot">
-        <svg viewBox="0 0 24 24" fill="none">
-          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="#0D0A1A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </div>
-      <div>
-        <div class="logo-text">Dua<span>.</span></div>
-        <div style="font-size:11px;color:var(--text3);letter-spacing:.06em;text-transform:uppercase">Marketing de Moda</div>
-      </div>
+    <div class="logo">
+      <div class="logo-mark">DUA<span>.</span></div>
+      <div class="logo-sub">Marketing<br>de Moda</div>
     </div>
 
     <div class="header-center">
-      <div class="header-title">Painel de Produção</div>
-      <div class="header-week" id="week-label">Carregando...</div>
+      <div class="painel-label">Painel de Produção</div>
+      <div class="semana-label" id="semana-label">—</div>
     </div>
 
     <div class="header-right">
-      <div class="refresh-info">
-        <strong id="last-update">—</strong><br>
-        Atualiza a cada 30 min
+      <div class="update-info">
+        <strong id="ultimo-update">—</strong><br>
+        atualiza a cada 30 min
       </div>
-      <button class="refresh-btn" id="refresh-btn" onclick="loadData()">↻ Atualizar</button>
+      <button class="btn-refresh" id="btn-refresh" onclick="loadData()">↻ Atualizar</button>
     </div>
   </header>
 
-  <!-- CONFIG BANNER -->
+  <!-- CONFIG -->
   <div id="config-banner">
-    <div class="icon">🔑</div>
-    <div class="text">
-      <strong>Configure sua API Key do ClickUp para ativar o painel</strong>
-      <p>Acesse <strong>app.clickup.com → Configurações → Apps → API Token</strong> e cole abaixo. A chave é salva apenas no seu navegador (localStorage).</p>
-      <div class="api-input-row">
-        <input class="api-input" id="api-key-input" type="password" placeholder="pk_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" />
-        <button class="api-save-btn" onclick="saveApiKey()">Salvar e conectar</button>
+    <div class="banner-icon">🔑</div>
+    <div class="banner-text" style="flex:1">
+      <strong>Configure sua API Key do ClickUp</strong>
+      <p>Acesse <strong>app.clickup.com → Configurações → Apps → API Token</strong> e cole abaixo.<br>A chave fica salva só no seu navegador.</p>
+      <div class="api-row">
+        <input class="api-input" id="api-key-input" type="password" placeholder="pk_xxxxxxxxxxxxxxxxxxxxxxxx"/>
+        <button class="btn-salvar" onclick="saveKey()">Salvar</button>
       </div>
     </div>
   </div>
 
   <!-- ERROR -->
-  <div id="error-box" class="error-state" style="display:none"></div>
+  <div id="error-box" style="display:none"></div>
 
   <!-- LOADING -->
-  <div id="loading-state" class="loading-state" style="display:none">
+  <div id="loading-state" style="display:none">
     <div class="spinner"></div>
-    <div class="loading-text">Buscando dados do ClickUp...</div>
+    <div class="loading-label">Buscando dados do ClickUp…</div>
   </div>
 
   <!-- DASHBOARD -->
   <div id="dashboard" style="display:none">
 
-    <!-- STATS -->
-    <div class="stats-row">
-      <div class="stat-card green">
-        <div class="stat-num" id="stat-entregues">—</div>
+    <div class="stats-grid">
+      <div class="stat verde">
+        <div class="stat-num" id="s-entregues">—</div>
         <div class="stat-label">Entregues</div>
       </div>
-      <div class="stat-card amber">
-        <div class="stat-num" id="stat-pendentes">—</div>
+      <div class="stat laranja">
+        <div class="stat-num" id="s-pendentes">—</div>
         <div class="stat-label">Pendentes</div>
       </div>
-      <div class="stat-card blue">
-        <div class="stat-num" id="stat-total">—</div>
-        <div class="stat-label">Total (excl. templates)</div>
+      <div class="stat azul">
+        <div class="stat-num" id="s-total">—</div>
+        <div class="stat-label">Total</div>
       </div>
-      <div class="stat-card purple">
-        <div class="stat-num" id="stat-pct">—</div>
+      <div class="stat amarelo">
+        <div class="stat-num" id="s-pct">—</div>
         <div class="stat-label">Taxa de entrega</div>
       </div>
     </div>
 
-    <!-- GLOBAL PROGRESS -->
-    <div class="global-progress">
-      <div class="progress-header">
-        <div class="progress-title">Progresso geral da semana</div>
-        <div class="progress-pct" id="prog-pct">0%</div>
-      </div>
+    <div class="progress-bar">
+      <div class="progress-title">Progresso geral da semana</div>
       <div class="progress-track">
         <div class="progress-fill" id="prog-fill" style="width:0%"></div>
       </div>
+      <div class="progress-pct" id="prog-pct">0%</div>
     </div>
 
-    <!-- LEGEND -->
-    <div class="legend-row">
-      <div class="legend-item"><div class="legend-dot" style="background:var(--ok)"></div>Agendamento</div>
-      <div class="legend-item"><div class="legend-dot" style="background:var(--design)"></div>Design</div>
-      <div class="legend-item"><div class="legend-dot" style="background:var(--aprovacao)"></div>Em aprovação</div>
-      <div class="legend-item"><div class="legend-dot" style="background:var(--planejamento)"></div>Planejamento</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#86efac)"></div>Concluído</div>
+    <div class="legend">
+      <div class="leg"><div class="leg-dot" style="background:#86efac"></div>Agendamento</div>
+      <div class="leg"><div class="leg-dot" style="background:#FDB97D"></div>Design</div>
+      <div class="leg"><div class="leg-dot" style="background:var(--azul)"></div>Em aprovação</div>
+      <div class="leg"><div class="leg-dot" style="background:var(--rosa)"></div>Planejamento</div>
+      <div class="leg"><div class="leg-dot" style="background:var(--cinza)"></div>Templates</div>
     </div>
 
-    <!-- CLIENT GRID -->
-    <div class="main-grid" id="client-grid"></div>
+    <div class="client-grid" id="client-grid"></div>
 
   </div>
 
   <!-- FOOTER -->
   <footer>
-    <div><span class="pulse-dot"></span> <span id="conn-status">Aguardando configuração</span></div>
-    <div>Dua Criativa © 2026 — Dashboard de Produção</div>
+    <div><span class="pulse"></span><span id="conn-status">Aguardando configuração</span></div>
+    <div>Dua Criativa © 2026</div>
     <div id="next-refresh">—</div>
   </footer>
 
 </div>
 
 <script>
-// ============================================================
-// CONFIGURAÇÃO
-// ============================================================
-const WORKSPACE_ID = '9013166822';
-const SPACE_ID = '901312829987';
-const REFRESH_INTERVAL = 30 * 60 * 1000; // 30 minutos
+const WORKSPACE = '9013166822';
+const REFRESH_MS = 30 * 60 * 1000;
 
 const CLIENTES = [
-  { nome: 'Andirá Jeans',  listId: '901324614041', resp: 'Alexia + Isadora' },
-  { nome: 'Amiche',        listId: '901324613220', resp: 'Alexia / Ciane' },
-  { nome: 'Del Carmen',    listId: '901324614474', resp: 'Alexia / Ciane' },
-  { nome: 'Doce Caju',     listId: '901324614721', resp: 'Luana' },
-  { nome: 'Eloah',         listId: '901324682275', resp: 'Alexia' },
-  { nome: 'Flora Minha',   listId: '901324682301', resp: 'Luana' },
-  { nome: 'Kyrefh Jeans',  listId: '901324682326', resp: 'Luana' },
-  { nome: 'Marry Blue',    listId: '901324682343', resp: 'Luana / Ciane' },
-  { nome: 'Nina & Noz',    listId: '901324682520', resp: 'Luana' },
-  { nome: 'Sun Liv',       listId: '901324682532', resp: 'Isadora' },
-  { nome: 'Tchu Bi',       listId: '901324505493', resp: 'Luana' },
+  { nome:'Andirá Jeans',  listId:'901324614041', resp:'Alexia + Isadora' },
+  { nome:'Amiche',        listId:'901324613220', resp:'Alexia / Ciane' },
+  { nome:'Del Carmen',    listId:'901324614474', resp:'Alexia / Ciane' },
+  { nome:'Doce Caju',     listId:'901324614721', resp:'Luana' },
+  { nome:'Eloah',         listId:'901324682275', resp:'Alexia' },
+  { nome:'Flora Minha',   listId:'901324682301', resp:'Luana' },
+  { nome:'Kyrefh Jeans',  listId:'901324682326', resp:'Luana' },
+  { nome:'Marry Blue',    listId:'901324682343', resp:'Luana / Ciane' },
+  { nome:'Nina & Noz',    listId:'901324682520', resp:'Luana' },
+  { nome:'Sun Liv',       listId:'901324682532', resp:'Isadora' },
+  { nome:'Tchu Bi',       listId:'901324505493', resp:'Luana' },
 ];
 
-const STATUS_ENTREGUE = ['agendamento', 'concluído', 'concluido', 'complete', 'done'];
-const STATUS_IGNORAR   = ['templates', 'template'];
+const OK = ['agendamento','concluído','concluido','complete','done'];
+const SKIP = ['template','templates'];
 
-let apiKey = localStorage.getItem('dua_clickup_key') || '';
-let refreshTimer = null;
-let nextRefreshAt = null;
+let apiKey = localStorage.getItem('dua_key') || '';
+let timer = null, nextAt = null;
 
-// ============================================================
-// INIT
-// ============================================================
 window.onload = () => {
-  updateWeekLabel();
+  setWeekLabel();
   if (apiKey) {
     document.getElementById('api-key-input').value = apiKey;
     document.getElementById('config-banner').style.display = 'none';
     loadData();
     scheduleRefresh();
   }
-  setInterval(updateNextRefresh, 1000);
+  setInterval(tickRefresh, 1000);
 };
 
-function saveApiKey() {
-  const val = document.getElementById('api-key-input').value.trim();
-  if (!val) return;
-  apiKey = val;
-  localStorage.setItem('dua_clickup_key', val);
+function saveKey() {
+  const v = document.getElementById('api-key-input').value.trim();
+  if (!v) return;
+  apiKey = v;
+  localStorage.setItem('dua_key', v);
   document.getElementById('config-banner').style.display = 'none';
   loadData();
   scheduleRefresh();
 }
 
-// ============================================================
-// SEMANA
-// ============================================================
-function getWeekRange() {
+function getWeek() {
   const now = new Date();
-  const day = now.getDay();
-  const diffToSeg = (day === 0) ? -6 : 1 - day;
-  const seg = new Date(now); seg.setDate(now.getDate() + diffToSeg); seg.setHours(0,0,0,0);
+  const d = now.getDay();
+  const diff = d === 0 ? -6 : 1 - d;
+  const seg = new Date(now); seg.setDate(now.getDate() + diff); seg.setHours(0,0,0,0);
   const dom = new Date(seg); dom.setDate(seg.getDate() + 6); dom.setHours(23,59,59,999);
   return { seg, dom };
 }
 
-function fmtDate(d) {
-  return d.toLocaleDateString('pt-BR', { day:'2-digit', month:'2-digit' });
+function fmt(d) { return d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'}); }
+function fmtDia(d) { return d.toLocaleDateString('pt-BR',{weekday:'short'}).replace('.',''); }
+
+function setWeekLabel() {
+  const { seg, dom } = getWeek();
+  document.getElementById('semana-label').textContent = `Semana ${fmt(seg)} a ${fmt(dom)}`;
 }
 
-function updateWeekLabel() {
-  const { seg, dom } = getWeekRange();
-  document.getElementById('week-label').textContent = `Semana ${fmtDate(seg)} a ${fmtDate(dom)}`;
+async function api(path) {
+  const r = await fetch(`https://api.clickup.com/api/v2${path}`,{headers:{Authorization:apiKey}});
+  if (!r.ok) throw new Error(`API ${r.status}`);
+  return r.json();
 }
 
-// ============================================================
-// FETCH CLICKUP
-// ============================================================
-async function fetchClickUp(path) {
-  const res = await fetch(`https://api.clickup.com/api/v2${path}`, {
-    headers: { Authorization: apiKey }
-  });
-  if (!res.ok) throw new Error(`ClickUp API error ${res.status}: ${await res.text()}`);
-  return res.json();
-}
-
-async function getSubtasksForList(listId, seg, dom) {
-  const segTs = seg.getTime();
-  const domTs = dom.getTime();
-
-  const data = await fetchClickUp(
-    `/list/${listId}/task?subtasks=true&include_closed=true&due_date_gt=${segTs}&due_date_lt=${domTs}`
-  );
-
-  const subtasks = [];
-  const tasks = data.tasks || [];
-
-  for (const task of tasks) {
-    const status = (task.status?.status || '').toLowerCase();
-    if (STATUS_IGNORAR.some(s => status.includes(s))) continue;
-
-    // Se tem subtarefas, pegar as subtarefas
-    if (task.subtasks && task.subtasks.length > 0) {
-      for (const sub of task.subtasks) {
-        const ss = (sub.status?.status || '').toLowerCase();
-        if (STATUS_IGNORAR.some(s => ss.includes(s))) continue;
-        const due = parseInt(sub.due_date || 0);
-        if (due >= segTs && due <= domTs) {
-          subtasks.push({ name: sub.name, status: ss, due });
+async function getSubtasks(listId, seg, dom) {
+  const data = await api(`/list/${listId}/task?subtasks=true&include_closed=true&due_date_gt=${seg.getTime()}&due_date_lt=${dom.getTime()}`);
+  const items = [];
+  for (const t of (data.tasks||[])) {
+    const s = (t.status?.status||'').toLowerCase();
+    if (SKIP.some(x=>s.includes(x))) continue;
+    if (t.subtasks?.length) {
+      for (const sub of t.subtasks) {
+        const ss = (sub.status?.status||'').toLowerCase();
+        if (SKIP.some(x=>ss.includes(x))) continue;
+        const due = parseInt(sub.due_date||0);
+        if (due >= seg.getTime() && due <= dom.getTime()) {
+          items.push({ name:sub.name, status:ss, due });
         }
       }
     } else {
-      subtasks.push({ name: task.name, status, due: parseInt(task.due_date || 0) });
+      items.push({ name:t.name, status:s, due:parseInt(t.due_date||0) });
     }
   }
-
-  return subtasks;
+  return items;
 }
 
-// ============================================================
-// LOAD DATA
-// ============================================================
 async function loadData() {
   if (!apiKey) return;
-
-  const btn = document.getElementById('refresh-btn');
-  btn.disabled = true;
-  btn.textContent = '↻ Carregando...';
-
+  const btn = document.getElementById('btn-refresh');
+  btn.disabled = true; btn.textContent = '↻ Carregando…';
   document.getElementById('error-box').style.display = 'none';
   document.getElementById('loading-state').style.display = 'block';
   document.getElementById('dashboard').style.display = 'none';
 
   try {
-    const { seg, dom } = getWeekRange();
-    let totalEntregue = 0, totalPendente = 0;
-    const clientData = [];
+    const { seg, dom } = getWeek();
+    let totalOk=0, totalPend=0;
+    const cards = [];
 
-    for (const cliente of CLIENTES) {
+    for (const c of CLIENTES) {
       try {
-        const subtasks = await getSubtasksForList(cliente.listId, seg, dom);
-        if (subtasks.length === 0) continue;
-
-        const entregues = subtasks.filter(s => STATUS_ENTREGUE.some(e => s.status.includes(e)));
-        const pendentes = subtasks.filter(s => !STATUS_ENTREGUE.some(e => s.status.includes(e)));
-
-        totalEntregue += entregues.length;
-        totalPendente += pendentes.length;
-
-        clientData.push({
-          ...cliente,
-          subtasks,
-          entregues: entregues.length,
-          pendentes: pendentes.length,
-          total: subtasks.length,
-          pct: subtasks.length > 0 ? Math.round((entregues.length / subtasks.length) * 100) : 0
-        });
-      } catch (e) {
-        console.warn(`Erro ao buscar ${cliente.nome}:`, e);
-      }
+        const subs = await getSubtasks(c.listId, seg, dom);
+        if (!subs.length) continue;
+        const ok = subs.filter(s=>OK.some(e=>s.status.includes(e)));
+        const pend = subs.filter(s=>!OK.some(e=>s.status.includes(e)));
+        totalOk += ok.length; totalPend += pend.length;
+        cards.push({ ...c, subs, ok:ok.length, pend:pend.length,
+          total:subs.length, pct:Math.round((ok.length/subs.length)*100) });
+      } catch(e) { console.warn(c.nome, e); }
     }
 
-    const total = totalEntregue + totalPendente;
-    const pctGlobal = total > 0 ? Math.round((totalEntregue / total) * 100) : 0;
+    const total = totalOk + totalPend;
+    const pct = total ? Math.round((totalOk/total)*100) : 0;
 
-    // Atualizar stats
-    document.getElementById('stat-entregues').textContent = totalEntregue;
-    document.getElementById('stat-pendentes').textContent = totalPendente;
-    document.getElementById('stat-total').textContent = total;
-    document.getElementById('stat-pct').textContent = pctGlobal + '%';
-    document.getElementById('prog-pct').textContent = pctGlobal + '%';
+    document.getElementById('s-entregues').textContent = totalOk;
+    document.getElementById('s-pendentes').textContent = totalPend;
+    document.getElementById('s-total').textContent = total;
+    document.getElementById('s-pct').textContent = pct+'%';
+    document.getElementById('prog-pct').textContent = pct+'%';
+    setTimeout(()=>{ document.getElementById('prog-fill').style.width=pct+'%'; },100);
 
-    setTimeout(() => {
-      document.getElementById('prog-fill').style.width = pctGlobal + '%';
-    }, 100);
+    renderCards(cards);
 
-    // Renderizar clientes
-    renderClients(clientData, seg, dom);
-
-    // Atualizar status
     const now = new Date();
-    document.getElementById('last-update').textContent = now.toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' });
+    document.getElementById('ultimo-update').textContent = now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
     document.getElementById('conn-status').textContent = 'Conectado ao ClickUp';
-
     document.getElementById('loading-state').style.display = 'none';
     document.getElementById('dashboard').style.display = 'block';
 
-  } catch (err) {
+  } catch(err) {
     document.getElementById('loading-state').style.display = 'none';
-    const errBox = document.getElementById('error-box');
-    errBox.style.display = 'block';
-    errBox.textContent = `Erro ao conectar: ${err.message}. Verifique sua API Key e tente novamente.`;
+    const e = document.getElementById('error-box');
+    e.style.display = 'block';
+    e.textContent = `Erro: ${err.message} — Verifique sua API Key.`;
     document.getElementById('conn-status').textContent = 'Erro de conexão';
   }
 
-  btn.disabled = false;
-  btn.textContent = '↻ Atualizar';
+  btn.disabled = false; btn.textContent = '↻ Atualizar';
 }
 
-// ============================================================
-// RENDER CLIENTS
-// ============================================================
-function renderClients(clients, seg, dom) {
+function getStatusClass(s) {
+  if (OK.some(e=>s.includes(e))) return 'p-ok';
+  if (s.includes('design')) return 'p-design';
+  if (s.includes('aprov')) return 'p-aprovacao';
+  return 'p-planejamento';
+}
+
+function renderCards(cards) {
+  cards.sort((a,b)=>a.pct-b.pct);
   const grid = document.getElementById('client-grid');
   grid.innerHTML = '';
 
-  // Ordenar: menor % primeiro
-  clients.sort((a, b) => a.pct - b.pct);
+  for (const c of cards) {
+    const pc = c.pct===100?'pct-100':c.pct>=80?'pct-hi':c.pct>=50?'pct-mid':'pct-low';
+    const fc = c.pct===100?'fill-100':c.pct>=80?'fill-hi':c.pct>=50?'fill-mid':'fill-low';
 
-  for (const c of clients) {
-    const pctClass = c.pct === 100 ? 'pct-100' : c.pct >= 80 ? 'pct-high' : c.pct >= 50 ? 'pct-mid' : 'pct-low';
-    const fillClass = c.pct === 100 ? 'fill-100' : c.pct >= 80 ? 'fill-high' : c.pct >= 50 ? 'fill-mid' : 'fill-low';
-
-    // Agrupar subtasks por dia
-    const byDay = {};
-    for (const st of c.subtasks) {
-      const d = new Date(st.due);
-      const key = d.toLocaleDateString('pt-BR', { day:'2-digit', month:'2-digit' });
-      const dayName = d.toLocaleDateString('pt-BR', { weekday:'short' }).replace('.','');
-      if (!byDay[key]) byDay[key] = { day: key, dayName, statuses: [] };
-      byDay[key].statuses.push(st.status);
+    // Agrupar por dia
+    const dias = {};
+    for (const s of c.subs) {
+      const d = new Date(s.due);
+      const k = fmt(d);
+      if (!dias[k]) dias[k] = { label:`${fmt(d)} ${fmtDia(d)}`, statuses:[] };
+      dias[k].statuses.push(s.status);
     }
 
-    const pillsHTML = Object.values(byDay).map(({ day, dayName, statuses }) => {
-      // Status dominante do dia
-      const dominant = getDominantStatus(statuses);
-      const cls = getStatusClass(dominant);
-      const isOk = STATUS_ENTREGUE.some(e => dominant.includes(e));
-      return `<span class="day-pill ${cls}">${day} ${dayName} ${isOk ? '✓' : ''}</span>`;
+    const pillsHtml = Object.values(dias).map(({label, statuses})=>{
+      const dominante = statuses.every(s=>OK.some(e=>s.includes(e)))?'agendamento':
+                        statuses.some(s=>s.includes('design'))?'design':
+                        statuses.some(s=>s.includes('aprov'))?'aprovacao':'planejamento';
+      const cls = getStatusClass(dominante);
+      const tick = dominante==='agendamento'?' ✓':'';
+      return `<span class="pill ${cls}">${label}${tick}</span>`;
     }).join('');
 
     const card = document.createElement('div');
     card.className = 'client-card';
     card.innerHTML = `
-      <div class="client-header">
+      <div class="card-head">
         <div>
-          <div class="client-name">${c.nome}</div>
-          <div class="client-resp">${c.resp}</div>
+          <div class="card-nome">${c.nome}</div>
+          <div class="card-resp">${c.resp}</div>
         </div>
-        <div class="client-pct-badge ${pctClass}">${c.pct}%</div>
+        <div class="pct-badge ${pc}">${c.pct}%</div>
       </div>
-      <div class="client-mini-bar">
-        <div class="client-mini-fill ${fillClass}" style="width:${c.pct}%"></div>
-      </div>
-      <div class="days-row">${pillsHTML || '<span style="color:var(--text3);font-size:12px">Sem subtarefas na semana</span>'}</div>
+      <div class="card-bar"><div class="card-bar-fill ${fc}" style="width:${c.pct}%"></div></div>
+      <div class="pills">${pillsHtml||'<span style="color:#555;font-size:11px">Sem subtarefas</span>'}</div>
     `;
     grid.appendChild(card);
   }
 }
 
-function getDominantStatus(statuses) {
-  if (statuses.some(s => STATUS_ENTREGUE.some(e => s.includes(e)))) {
-    const all = statuses.every(s => STATUS_ENTREGUE.some(e => s.includes(e)));
-    return all ? 'agendamento' : 'design';
-  }
-  return statuses[0] || 'planejamento';
-}
-
-function getStatusClass(status) {
-  if (STATUS_ENTREGUE.some(e => status.includes(e))) return 'd-agendamento';
-  if (status.includes('design')) return 'd-design';
-  if (status.includes('aprovação') || status.includes('aprovacao')) return 'd-aprovacao';
-  if (status.includes('planejamento')) return 'd-planejamento';
-  return 'd-planejamento';
-}
-
-// ============================================================
-// AUTO REFRESH
-// ============================================================
 function scheduleRefresh() {
-  if (refreshTimer) clearInterval(refreshTimer);
-  nextRefreshAt = Date.now() + REFRESH_INTERVAL;
-  refreshTimer = setInterval(() => {
-    loadData();
-    nextRefreshAt = Date.now() + REFRESH_INTERVAL;
-  }, REFRESH_INTERVAL);
+  if (timer) clearInterval(timer);
+  nextAt = Date.now() + REFRESH_MS;
+  timer = setInterval(()=>{ loadData(); nextAt=Date.now()+REFRESH_MS; }, REFRESH_MS);
 }
 
-function updateNextRefresh() {
-  if (!nextRefreshAt) return;
-  const remaining = Math.max(0, nextRefreshAt - Date.now());
-  const min = Math.floor(remaining / 60000);
-  const sec = Math.floor((remaining % 60000) / 1000);
+function tickRefresh() {
+  if (!nextAt) return;
+  const r = Math.max(0, nextAt - Date.now());
+  const m = Math.floor(r/60000);
+  const s = Math.floor((r%60000)/1000);
   document.getElementById('next-refresh').textContent =
-    `Próxima atualização em ${min}:${String(sec).padStart(2,'0')}`;
+    `Próxima atualização em ${m}:${String(s).padStart(2,'0')}`;
 }
 </script>
 </body>
