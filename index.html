@@ -340,29 +340,6 @@ body::before {
 .cal-row.cal-pend .cal-cliente { color:var(--white) }
 .cal-empty { padding:12px 18px; font-size:11px; color:var(--gray2); font-style:italic }
 
-/* ── MÉTRICAS VIEW ──────────────────────────────────────── */
-.met-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr)); gap:var(--g) }
-.met-card {
-  background:var(--black2); border:1px solid var(--br); border-radius:var(--r);
-  padding:20px 18px; box-shadow:var(--shadow-card);
-  transition:border-color .2s, transform .2s; cursor:default;
-}
-.met-card:hover { border-color:var(--br2); transform:translateY(-1px) }
-.met-avatar {
-  width:42px; height:42px; border-radius:12px;
-  background:var(--yellow-a); color:var(--yellow);
-  font-family:var(--fd); font-size:22px;
-  display:flex; align-items:center; justify-content:center;
-  margin-bottom:12px; border:1px solid rgba(245,230,66,.14);
-}
-.met-name { font-size:14px; font-weight:700; margin-bottom:2px }
-.met-pct { font-family:var(--fd); font-size:34px; letter-spacing:.04em; line-height:1; margin-bottom:6px }
-.met-bar { height:2px; background:var(--black5); border-radius:2px; overflow:hidden; margin-bottom:12px }
-.met-stats { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px }
-.met-stat { font-size:10px; padding:2px 7px; border-radius:4px }
-.met-stat.ok   { background:var(--ok-d);   color:var(--ok);   border:1px solid rgba(34,197,94,.14) }
-.met-stat.warn { background:var(--warn-d); color:var(--warn); border:1px solid rgba(245,158,11,.14) }
-.met-clients { font-size:10px; color:var(--gray2); line-height:1.6 }
 
 /* ── FOOTER ─────────────────────────────────────────────── */
 .footer { margin-top:28px; padding-top:14px; position:relative }
@@ -444,13 +421,6 @@ body::before {
       </svg>
     </div>
 
-    <div class="sb-item" data-view="metricas" onclick="switchView('metricas')" title="Por responsável">
-      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="18" y1="20" x2="18" y2="10"/>
-        <line x1="12" y1="20" x2="12" y2="4"/>
-        <line x1="6"  y1="20" x2="6"  y2="14"/>
-      </svg>
-    </div>
 
   </div>
   <div class="sb-bottom">
@@ -649,7 +619,6 @@ const VIEW_LABELS = {
   painel:    'Clientes',
   clientes:  'Subtarefas por cliente',
   calendario:'Por data de entrega',
-  metricas:  'Por responsável',
 };
 
 function switchView(v) {
@@ -671,7 +640,6 @@ function renderView() {
       case 'painel':    renderPainel();    break;
       case 'clientes':  renderClientes();  break;
       case 'calendario':renderCalendario();break;
-      case 'metricas':  renderMetricas();  break;
     }
     vc.style.opacity = '1';
   }, 150);
@@ -825,47 +793,6 @@ function renderCalendario() {
   $('view-content').innerHTML = html;
 }
 
-/* ── VIEW: MÉTRICAS (por responsável) ────────────────────── */
-function renderMetricas() {
-  const people = {};
-
-  for (const c of allCards) {
-    const names = c.resp.split(/\s*[\/+]\s*/).map(r => r.trim()).filter(Boolean);
-    for (const name of names) {
-      if (!people[name]) people[name] = { name, ok:0, pnd:0, tot:0, clientes:[] };
-      people[name].ok  += c.ok;
-      people[name].pnd += c.pnd;
-      people[name].tot += c.tot;
-      if (!people[name].clientes.includes(c.nome)) people[name].clientes.push(c.nome);
-    }
-  }
-
-  const sorted = Object.values(people).sort((a,b) => b.tot - a.tot);
-
-  const cards = sorted.map(p => {
-    const pct = p.tot ? Math.round((p.ok / p.tot) * 100) : 0;
-    const [pc, fc] = pctCls(pct);
-    return `
-      <div class="met-card">
-        <div class="met-avatar">${p.name[0]}</div>
-        <div class="met-name">${p.name}</div>
-        <div class="met-pct ${pc}">${pct}%</div>
-        <div class="met-bar cbar">
-          <div class="cfill ${fc}" data-w="${pct}%" style="width:0%"></div>
-        </div>
-        <div class="met-stats">
-          <span class="met-stat ok">${p.ok} entregue${p.ok>1?'s':''}</span>
-          <span class="met-stat warn">${p.pnd} pendente${p.pnd>1?'s':''}</span>
-        </div>
-        <div class="met-clients">${p.clientes.join(', ')}</div>
-      </div>`;
-  }).join('');
-
-  $('view-content').innerHTML = `<div class="met-grid">${cards}</div>`;
-  setTimeout(() => {
-    document.querySelectorAll('.cfill').forEach(el => { el.style.width = el.dataset.w; });
-  }, 80);
-}
 
 /* ── API ─────────────────────────────────────────────────── */
 function saveKey() {
