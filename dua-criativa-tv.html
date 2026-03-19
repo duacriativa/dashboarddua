@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dua Criativa — Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --roxo: #6B21E8;
+    --roxo-light: #8B47F0;
+    --roxo-dark: #4A0FAD;
+    --amarelo: #F5E642;
+    --amarelo-dark: #D4C820;
+    --bg: #0D0A1A;
+    --bg2: #150F2B;
+    --bg3: #1E1638;
+    --border: rgba(107,33,232,0.3);
+    --text: #F0ECFF;
+    --text2: #9B8FC4;
+    --text3: #6B5F8A;
+    --ok: #22C97A;
+    --ok-bg: rgba(34,201,122,0.12);
+    --design: #F5A623;
+    --design-bg: rgba(245,166,35,0.12);
+    --aprovacao: #60A5FA;
+    --aprovacao-bg: rgba(96,165,250,0.12);
+    --planejamento: #F472B6;
+    --planejamento-bg: rgba(244,114,182,0.12);
+    --templates: #6B7280;
+    --templates-bg: rgba(107,114,128,0.12);
+    --danger: #F87171;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Background grid */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(107,33,232,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(107,33,232,0.06) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Glow top */
+  body::after {
+    content: '';
+    position: fixed;
+    top: -200px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 800px;
+    height: 400px;
+    background: radial-gradient(ellipse, rgba(107,33,232,0.25) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 1800px;
+    margin: 0 auto;
+    padding: 28px 36px;
+  }
+
+  /* HEADER */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 32px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo-area {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .logo-dot {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--amarelo);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 24px rgba(245,230,66,0.4);
+  }
+
+  .logo-dot svg { width: 22px; height: 22px; }
+
+  .logo-text {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+
+  .logo-text span { color: var(--amarelo); }
+
+  .header-center {
+    text-align: center;
+  }
+
+  .header-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--text2);
+  }
+
+  .header-week {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    margin-top: 2px;
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .refresh-info {
+    text-align: right;
+    font-size: 12px;
+    color: var(--text3);
+    line-height: 1.6;
+  }
+
+  .refresh-info strong { color: var(--text2); }
+
+  .refresh-btn {
+    background: var(--roxo);
+    border: none;
+    color: white;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all .2s;
+    letter-spacing: .03em;
+  }
+
+  .refresh-btn:hover { background: var(--roxo-light); transform: translateY(-1px); }
+  .refresh-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+
+  /* CONFIG BANNER */
+  #config-banner {
+    background: var(--bg2);
+    border: 1px solid var(--amarelo);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  #config-banner .icon {
+    font-size: 24px;
+    flex-shrink: 0;
+  }
+
+  #config-banner .text { flex: 1; }
+  #config-banner .text strong { color: var(--amarelo); font-size: 14px; display: block; margin-bottom: 4px; }
+  #config-banner .text p { font-size: 12px; color: var(--text2); line-height: 1.5; }
+
+  .api-input-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .api-input {
+    flex: 1;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    padding: 8px 14px;
+    outline: none;
+    transition: border-color .2s;
+  }
+
+  .api-input:focus { border-color: var(--roxo-light); }
+
+  .api-save-btn {
+    background: var(--amarelo);
+    color: #0D0A1A;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 8px 20px;
+    cursor: pointer;
+    transition: all .2s;
+    white-space: nowrap;
+  }
+
+  .api-save-btn:hover { background: var(--amarelo-dark); }
+
+  /* STATS ROW */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  .stat-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px 22px;
+    position: relative;
+    overflow: hidden;
+    transition: transform .2s;
+  }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: 14px 14px 0 0;
+  }
+
+  .stat-card.green::before { background: var(--ok); }
+  .stat-card.amber::before { background: var(--design); }
+  .stat-card.blue::before { background: var(--aprovacao); }
+  .stat-card.purple::before { background: var(--roxo-light); }
+
+  .stat-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 40px;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .stat-card.green .stat-num { color: var(--ok); }
+  .stat-card.amber .stat-num { color: var(--design); }
+  .stat-card.blue .stat-num { color: var(--aprovacao); }
+  .stat-card.purple .stat-num { color: var(--amarelo); }
+
+  .stat-label {
+    font-size: 12px;
+    color: var(--text2);
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    font-weight: 500;
+  }
+
+  /* PROGRESS BAR GLOBAL */
+  .global-progress {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px 24px;
+    margin-bottom: 28px;
+  }
+
+  .progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+
+  .progress-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--text2);
+  }
+
+  .progress-pct {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--amarelo);
+  }
+
+  .progress-track {
+    height: 10px;
+    background: var(--bg3);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    border-radius: 10px;
+    background: linear-gradient(90deg, var(--roxo), var(--amarelo));
+    transition: width 1s ease;
+  }
+
+  /* MAIN GRID */
+  .main-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  /* CLIENT CARDS */
+  .client-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 20px;
+    transition: border-color .2s;
+  }
+
+  .client-card:hover { border-color: rgba(107,33,232,0.6); }
+
+  .client-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+
+  .client-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .client-resp {
+    font-size: 11px;
+    color: var(--text3);
+    margin-top: 2px;
+  }
+
+  .client-pct-badge {
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 20px;
+  }
+
+  .pct-100 { background: var(--ok-bg); color: var(--ok); }
+  .pct-high { background: rgba(245,230,66,0.12); color: var(--amarelo); }
+  .pct-mid { background: var(--design-bg); color: var(--design); }
+  .pct-low { background: rgba(248,113,113,0.12); color: var(--danger); }
+
+  .client-mini-bar {
+    height: 4px;
+    background: var(--bg3);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 14px;
+  }
+
+  .client-mini-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width .8s ease;
+  }
+
+  .fill-100 { background: var(--ok); }
+  .fill-high { background: var(--amarelo); }
+  .fill-mid { background: var(--design); }
+  .fill-low { background: var(--danger); }
+
+  .days-row {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+  }
+
+  .day-pill {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 4px 9px;
+    border-radius: 20px;
+    border: 1px solid transparent;
+    white-space: nowrap;
+    letter-spacing: .02em;
+  }
+
+  .d-agendamento { background: var(--ok-bg); color: var(--ok); border-color: rgba(34,201,122,0.3); }
+  .d-design { background: var(--design-bg); color: var(--design); border-color: rgba(245,166,35,0.3); }
+  .d-aprovacao { background: var(--aprovacao-bg); color: var(--aprovacao); border-color: rgba(96,165,250,0.3); }
+  .d-planejamento { background: var(--planejamento-bg); color: var(--planejamento); border-color: rgba(244,114,182,0.3); }
+  .d-templates { background: var(--templates-bg); color: var(--templates); border-color: rgba(107,114,128,0.3); }
+  .d-concluido { background: rgba(34,201,122,0.08); color: #86efac; border-color: rgba(134,239,172,0.2); }
+
+  /* LEGEND */
+  .legend-row {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 11px;
+    color: var(--text2);
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    font-weight: 500;
+  }
+
+  .legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+
+  /* LOADING */
+  .loading-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text2);
+  }
+
+  .spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--bg3);
+    border-top-color: var(--roxo-light);
+    border-radius: 50%;
+    animation: spin .8s linear infinite;
+    margin: 0 auto 16px;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .loading-text {
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    letter-spacing: .06em;
+  }
+
+  /* FOOTER */
+  footer {
+    margin-top: 28px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    color: var(--text3);
+  }
+
+  .pulse-dot {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--ok);
+    margin-right: 6px;
+    animation: pulse 2s ease infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: .5; transform: scale(.8); }
+  }
+
+  /* Error */
+  .error-state {
+    background: rgba(248,113,113,0.08);
+    border: 1px solid rgba(248,113,113,0.3);
+    border-radius: 10px;
+    padding: 16px 20px;
+    color: var(--danger);
+    font-size: 13px;
+    margin-bottom: 20px;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--bg3); border-radius: 3px; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HEADER -->
+  <header>
+    <div class="logo-area">
+      <div class="logo-dot">
+        <svg viewBox="0 0 24 24" fill="none">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="#0D0A1A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div>
+        <div class="logo-text">Dua<span>.</span></div>
+        <div style="font-size:11px;color:var(--text3);letter-spacing:.06em;text-transform:uppercase">Marketing de Moda</div>
+      </div>
+    </div>
+
+    <div class="header-center">
+      <div class="header-title">Painel de Produção</div>
+      <div class="header-week" id="week-label">Carregando...</div>
+    </div>
+
+    <div class="header-right">
+      <div class="refresh-info">
+        <strong id="last-update">—</strong><br>
+        Atualiza a cada 30 min
+      </div>
+      <button class="refresh-btn" id="refresh-btn" onclick="loadData()">↻ Atualizar</button>
+    </div>
+  </header>
+
+  <!-- CONFIG BANNER -->
+  <div id="config-banner">
+    <div class="icon">🔑</div>
+    <div class="text">
+      <strong>Configure sua API Key do ClickUp para ativar o painel</strong>
+      <p>Acesse <strong>app.clickup.com → Configurações → Apps → API Token</strong> e cole abaixo. A chave é salva apenas no seu navegador (localStorage).</p>
+      <div class="api-input-row">
+        <input class="api-input" id="api-key-input" type="password" placeholder="pk_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" />
+        <button class="api-save-btn" onclick="saveApiKey()">Salvar e conectar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ERROR -->
+  <div id="error-box" class="error-state" style="display:none"></div>
+
+  <!-- LOADING -->
+  <div id="loading-state" class="loading-state" style="display:none">
+    <div class="spinner"></div>
+    <div class="loading-text">Buscando dados do ClickUp...</div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="dashboard" style="display:none">
+
+    <!-- STATS -->
+    <div class="stats-row">
+      <div class="stat-card green">
+        <div class="stat-num" id="stat-entregues">—</div>
+        <div class="stat-label">Entregues</div>
+      </div>
+      <div class="stat-card amber">
+        <div class="stat-num" id="stat-pendentes">—</div>
+        <div class="stat-label">Pendentes</div>
+      </div>
+      <div class="stat-card blue">
+        <div class="stat-num" id="stat-total">—</div>
+        <div class="stat-label">Total (excl. templates)</div>
+      </div>
+      <div class="stat-card purple">
+        <div class="stat-num" id="stat-pct">—</div>
+        <div class="stat-label">Taxa de entrega</div>
+      </div>
+    </div>
+
+    <!-- GLOBAL PROGRESS -->
+    <div class="global-progress">
+      <div class="progress-header">
+        <div class="progress-title">Progresso geral da semana</div>
+        <div class="progress-pct" id="prog-pct">0%</div>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="prog-fill" style="width:0%"></div>
+      </div>
+    </div>
+
+    <!-- LEGEND -->
+    <div class="legend-row">
+      <div class="legend-item"><div class="legend-dot" style="background:var(--ok)"></div>Agendamento</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--design)"></div>Design</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--aprovacao)"></div>Em aprovação</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--planejamento)"></div>Planejamento</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#86efac)"></div>Concluído</div>
+    </div>
+
+    <!-- CLIENT GRID -->
+    <div class="main-grid" id="client-grid"></div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div><span class="pulse-dot"></span> <span id="conn-status">Aguardando configuração</span></div>
+    <div>Dua Criativa © 2026 — Dashboard de Produção</div>
+    <div id="next-refresh">—</div>
+  </footer>
+
+</div>
+
+<script>
+// ============================================================
+// CONFIGURAÇÃO
+// ============================================================
+const WORKSPACE_ID = '9013166822';
+const SPACE_ID = '901312829987';
+const REFRESH_INTERVAL = 30 * 60 * 1000; // 30 minutos
+
+const CLIENTES = [
+  { nome: 'Andirá Jeans',  listId: '901324614041', resp: 'Alexia + Isadora' },
+  { nome: 'Amiche',        listId: '901324613220', resp: 'Alexia / Ciane' },
+  { nome: 'Del Carmen',    listId: '901324614474', resp: 'Alexia / Ciane' },
+  { nome: 'Doce Caju',     listId: '901324614721', resp: 'Luana' },
+  { nome: 'Eloah',         listId: '901324682275', resp: 'Alexia' },
+  { nome: 'Flora Minha',   listId: '901324682301', resp: 'Luana' },
+  { nome: 'Kyrefh Jeans',  listId: '901324682326', resp: 'Luana' },
+  { nome: 'Marry Blue',    listId: '901324682343', resp: 'Luana / Ciane' },
+  { nome: 'Nina & Noz',    listId: '901324682520', resp: 'Luana' },
+  { nome: 'Sun Liv',       listId: '901324682532', resp: 'Isadora' },
+  { nome: 'Tchu Bi',       listId: '901324505493', resp: 'Luana' },
+];
+
+const STATUS_ENTREGUE = ['agendamento', 'concluído', 'concluido', 'complete', 'done'];
+const STATUS_IGNORAR   = ['templates', 'template'];
+
+let apiKey = localStorage.getItem('dua_clickup_key') || '';
+let refreshTimer = null;
+let nextRefreshAt = null;
+
+// ============================================================
+// INIT
+// ============================================================
+window.onload = () => {
+  updateWeekLabel();
+  if (apiKey) {
+    document.getElementById('api-key-input').value = apiKey;
+    document.getElementById('config-banner').style.display = 'none';
+    loadData();
+    scheduleRefresh();
+  }
+  setInterval(updateNextRefresh, 1000);
+};
+
+function saveApiKey() {
+  const val = document.getElementById('api-key-input').value.trim();
+  if (!val) return;
+  apiKey = val;
+  localStorage.setItem('dua_clickup_key', val);
+  document.getElementById('config-banner').style.display = 'none';
+  loadData();
+  scheduleRefresh();
+}
+
+// ============================================================
+// SEMANA
+// ============================================================
+function getWeekRange() {
+  const now = new Date();
+  const day = now.getDay();
+  const diffToSeg = (day === 0) ? -6 : 1 - day;
+  const seg = new Date(now); seg.setDate(now.getDate() + diffToSeg); seg.setHours(0,0,0,0);
+  const dom = new Date(seg); dom.setDate(seg.getDate() + 6); dom.setHours(23,59,59,999);
+  return { seg, dom };
+}
+
+function fmtDate(d) {
+  return d.toLocaleDateString('pt-BR', { day:'2-digit', month:'2-digit' });
+}
+
+function updateWeekLabel() {
+  const { seg, dom } = getWeekRange();
+  document.getElementById('week-label').textContent = `Semana ${fmtDate(seg)} a ${fmtDate(dom)}`;
+}
+
+// ============================================================
+// FETCH CLICKUP
+// ============================================================
+async function fetchClickUp(path) {
+  const res = await fetch(`https://api.clickup.com/api/v2${path}`, {
+    headers: { Authorization: apiKey }
+  });
+  if (!res.ok) throw new Error(`ClickUp API error ${res.status}: ${await res.text()}`);
+  return res.json();
+}
+
+async function getSubtasksForList(listId, seg, dom) {
+  const segTs = seg.getTime();
+  const domTs = dom.getTime();
+
+  const data = await fetchClickUp(
+    `/list/${listId}/task?subtasks=true&include_closed=true&due_date_gt=${segTs}&due_date_lt=${domTs}`
+  );
+
+  const subtasks = [];
+  const tasks = data.tasks || [];
+
+  for (const task of tasks) {
+    const status = (task.status?.status || '').toLowerCase();
+    if (STATUS_IGNORAR.some(s => status.includes(s))) continue;
+
+    // Se tem subtarefas, pegar as subtarefas
+    if (task.subtasks && task.subtasks.length > 0) {
+      for (const sub of task.subtasks) {
+        const ss = (sub.status?.status || '').toLowerCase();
+        if (STATUS_IGNORAR.some(s => ss.includes(s))) continue;
+        const due = parseInt(sub.due_date || 0);
+        if (due >= segTs && due <= domTs) {
+          subtasks.push({ name: sub.name, status: ss, due });
+        }
+      }
+    } else {
+      subtasks.push({ name: task.name, status, due: parseInt(task.due_date || 0) });
+    }
+  }
+
+  return subtasks;
+}
+
+// ============================================================
+// LOAD DATA
+// ============================================================
+async function loadData() {
+  if (!apiKey) return;
+
+  const btn = document.getElementById('refresh-btn');
+  btn.disabled = true;
+  btn.textContent = '↻ Carregando...';
+
+  document.getElementById('error-box').style.display = 'none';
+  document.getElementById('loading-state').style.display = 'block';
+  document.getElementById('dashboard').style.display = 'none';
+
+  try {
+    const { seg, dom } = getWeekRange();
+    let totalEntregue = 0, totalPendente = 0;
+    const clientData = [];
+
+    for (const cliente of CLIENTES) {
+      try {
+        const subtasks = await getSubtasksForList(cliente.listId, seg, dom);
+        if (subtasks.length === 0) continue;
+
+        const entregues = subtasks.filter(s => STATUS_ENTREGUE.some(e => s.status.includes(e)));
+        const pendentes = subtasks.filter(s => !STATUS_ENTREGUE.some(e => s.status.includes(e)));
+
+        totalEntregue += entregues.length;
+        totalPendente += pendentes.length;
+
+        clientData.push({
+          ...cliente,
+          subtasks,
+          entregues: entregues.length,
+          pendentes: pendentes.length,
+          total: subtasks.length,
+          pct: subtasks.length > 0 ? Math.round((entregues.length / subtasks.length) * 100) : 0
+        });
+      } catch (e) {
+        console.warn(`Erro ao buscar ${cliente.nome}:`, e);
+      }
+    }
+
+    const total = totalEntregue + totalPendente;
+    const pctGlobal = total > 0 ? Math.round((totalEntregue / total) * 100) : 0;
+
+    // Atualizar stats
+    document.getElementById('stat-entregues').textContent = totalEntregue;
+    document.getElementById('stat-pendentes').textContent = totalPendente;
+    document.getElementById('stat-total').textContent = total;
+    document.getElementById('stat-pct').textContent = pctGlobal + '%';
+    document.getElementById('prog-pct').textContent = pctGlobal + '%';
+
+    setTimeout(() => {
+      document.getElementById('prog-fill').style.width = pctGlobal + '%';
+    }, 100);
+
+    // Renderizar clientes
+    renderClients(clientData, seg, dom);
+
+    // Atualizar status
+    const now = new Date();
+    document.getElementById('last-update').textContent = now.toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' });
+    document.getElementById('conn-status').textContent = 'Conectado ao ClickUp';
+
+    document.getElementById('loading-state').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+
+  } catch (err) {
+    document.getElementById('loading-state').style.display = 'none';
+    const errBox = document.getElementById('error-box');
+    errBox.style.display = 'block';
+    errBox.textContent = `Erro ao conectar: ${err.message}. Verifique sua API Key e tente novamente.`;
+    document.getElementById('conn-status').textContent = 'Erro de conexão';
+  }
+
+  btn.disabled = false;
+  btn.textContent = '↻ Atualizar';
+}
+
+// ============================================================
+// RENDER CLIENTS
+// ============================================================
+function renderClients(clients, seg, dom) {
+  const grid = document.getElementById('client-grid');
+  grid.innerHTML = '';
+
+  // Ordenar: menor % primeiro
+  clients.sort((a, b) => a.pct - b.pct);
+
+  for (const c of clients) {
+    const pctClass = c.pct === 100 ? 'pct-100' : c.pct >= 80 ? 'pct-high' : c.pct >= 50 ? 'pct-mid' : 'pct-low';
+    const fillClass = c.pct === 100 ? 'fill-100' : c.pct >= 80 ? 'fill-high' : c.pct >= 50 ? 'fill-mid' : 'fill-low';
+
+    // Agrupar subtasks por dia
+    const byDay = {};
+    for (const st of c.subtasks) {
+      const d = new Date(st.due);
+      const key = d.toLocaleDateString('pt-BR', { day:'2-digit', month:'2-digit' });
+      const dayName = d.toLocaleDateString('pt-BR', { weekday:'short' }).replace('.','');
+      if (!byDay[key]) byDay[key] = { day: key, dayName, statuses: [] };
+      byDay[key].statuses.push(st.status);
+    }
+
+    const pillsHTML = Object.values(byDay).map(({ day, dayName, statuses }) => {
+      // Status dominante do dia
+      const dominant = getDominantStatus(statuses);
+      const cls = getStatusClass(dominant);
+      const isOk = STATUS_ENTREGUE.some(e => dominant.includes(e));
+      return `<span class="day-pill ${cls}">${day} ${dayName} ${isOk ? '✓' : ''}</span>`;
+    }).join('');
+
+    const card = document.createElement('div');
+    card.className = 'client-card';
+    card.innerHTML = `
+      <div class="client-header">
+        <div>
+          <div class="client-name">${c.nome}</div>
+          <div class="client-resp">${c.resp}</div>
+        </div>
+        <div class="client-pct-badge ${pctClass}">${c.pct}%</div>
+      </div>
+      <div class="client-mini-bar">
+        <div class="client-mini-fill ${fillClass}" style="width:${c.pct}%"></div>
+      </div>
+      <div class="days-row">${pillsHTML || '<span style="color:var(--text3);font-size:12px">Sem subtarefas na semana</span>'}</div>
+    `;
+    grid.appendChild(card);
+  }
+}
+
+function getDominantStatus(statuses) {
+  if (statuses.some(s => STATUS_ENTREGUE.some(e => s.includes(e)))) {
+    const all = statuses.every(s => STATUS_ENTREGUE.some(e => s.includes(e)));
+    return all ? 'agendamento' : 'design';
+  }
+  return statuses[0] || 'planejamento';
+}
+
+function getStatusClass(status) {
+  if (STATUS_ENTREGUE.some(e => status.includes(e))) return 'd-agendamento';
+  if (status.includes('design')) return 'd-design';
+  if (status.includes('aprovação') || status.includes('aprovacao')) return 'd-aprovacao';
+  if (status.includes('planejamento')) return 'd-planejamento';
+  return 'd-planejamento';
+}
+
+// ============================================================
+// AUTO REFRESH
+// ============================================================
+function scheduleRefresh() {
+  if (refreshTimer) clearInterval(refreshTimer);
+  nextRefreshAt = Date.now() + REFRESH_INTERVAL;
+  refreshTimer = setInterval(() => {
+    loadData();
+    nextRefreshAt = Date.now() + REFRESH_INTERVAL;
+  }, REFRESH_INTERVAL);
+}
+
+function updateNextRefresh() {
+  if (!nextRefreshAt) return;
+  const remaining = Math.max(0, nextRefreshAt - Date.now());
+  const min = Math.floor(remaining / 60000);
+  const sec = Math.floor((remaining % 60000) / 1000);
+  document.getElementById('next-refresh').textContent =
+    `Próxima atualização em ${min}:${String(sec).padStart(2,'0')}`;
+}
+</script>
+</body>
+</html>
