@@ -8,18 +8,25 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --black:  #080808; --black2: #101010; --black3: #181818; --black4: #222222;
-  --yellow: #F5E642; --yellow2:#DFCE1A;
-  --purple: #7C3AED;
-  --white:  #F5F5F0; --gray: #888884; --gray2: #444440;
-  --ok:#22C55E; --ok-d:rgba(34,197,94,.10);
-  --warn:#F59E0B; --warn-d:rgba(245,158,11,.10);
-  --danger:#EF4444; --danger-d:rgba(239,68,68,.10);
-  --info:#60A5FA; --info-d:rgba(96,165,250,.10);
-  --pink:#EC4899; --pink-d:rgba(236,72,153,.10);
-  --fd:'Bebas Neue',sans-serif; --fb:'Inter',sans-serif;
-  --br:rgba(255,255,255,.06); --br2:rgba(255,255,255,.12);
-  --r:10px; --g:14px;
+  --black:#080808;--black2:#101010;--black3:#181818;--black4:#222222;--black5:#2a2a2a;
+  --yellow:#F5E642;--yellow2:#DFCE1A;
+  --purple:#7C3AED;
+  --white:#F5F5F0;--gray:#888884;--gray2:#444440;
+  --ok:#22C55E;--ok-d:rgba(34,197,94,.10);
+  --warn:#F59E0B;--warn-d:rgba(245,158,11,.10);
+  --danger:#EF4444;--danger-d:rgba(239,68,68,.10);
+  --info:#60A5FA;--info-d:rgba(96,165,250,.10);
+  --pink:#EC4899;--pink-d:rgba(236,72,153,.10);
+  --fd:'Bebas Neue',sans-serif;--fb:'Inter',sans-serif;
+  --br:rgba(255,255,255,.06);--br2:rgba(255,255,255,.14);
+  --r:10px;--g:14px;
+
+  /* Cores por tipo de conteúdo */
+  --feed-color:#A78BFA;--feed-bg:rgba(167,139,250,.10);--feed-border:rgba(167,139,250,.25);
+  --stories-color:#34D399;--stories-bg:rgba(52,211,153,.10);--stories-border:rgba(52,211,153,.25);
+  --extra-color:#FB923C;--extra-bg:rgba(251,146,60,.10);--extra-border:rgba(251,146,60,.25);
+  --tiktok-color:#F472B6;--tiktok-bg:rgba(244,114,182,.10);--tiktok-border:rgba(244,114,182,.25);
+  --outros-color:#94A3B8;--outros-bg:rgba(148,163,184,.10);--outros-border:rgba(148,163,184,.20);
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 html{font-size:16px;-webkit-text-size-adjust:100%}
@@ -27,30 +34,40 @@ body{background:var(--black);color:var(--white);font-family:var(--fb);min-height
 body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 60% 40% at 80% 0%,rgba(124,58,237,.07) 0%,transparent 60%),radial-gradient(ellipse 40% 30% at 20% 100%,rgba(245,230,66,.04) 0%,transparent 60%);pointer-events:none;z-index:0}
 .page{position:relative;z-index:1;width:100%;max-width:1800px;margin:0 auto;padding:20px 20px 28px}
 
-/* HEADER */
+/* ── HEADER ── */
 .hdr{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:16px;padding-bottom:18px;border-bottom:1px solid var(--br);margin-bottom:20px}
 .brand{display:flex;align-items:center;gap:10px;flex-shrink:0}
 .logo{font-family:var(--fd);font-size:30px;letter-spacing:.04em;line-height:1}
 .logo em{color:var(--yellow);font-style:normal}
 .tag{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--gray);border-left:1px solid var(--gray2);padding-left:10px;line-height:1.5}
 .hdr-mid{text-align:center}
-.eyebrow{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--gray);margin-bottom:2px}
-.week{font-family:var(--fd);font-size:20px;letter-spacing:.06em;line-height:1}
-.hdr-right{display:flex;align-items:center;gap:12px;flex-shrink:0}
+.eyebrow{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--gray);margin-bottom:4px}
+.week-selector{display:flex;align-items:center;justify-content:center;gap:10px}
+.week-nav{background:none;border:1px solid var(--br2);color:var(--gray);font-size:16px;width:30px;height:30px;border-radius:6px;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.week-nav:hover{background:var(--black3);color:var(--white);border-color:var(--yellow)}
+.week-label-btn{background:var(--black3);border:1px solid var(--br2);border-radius:8px;padding:5px 14px;font-family:var(--fd);font-size:17px;letter-spacing:.06em;color:var(--white);cursor:pointer;transition:all .15s;white-space:nowrap}
+.week-label-btn:hover{border-color:var(--yellow);color:var(--yellow)}
+.week-sub{font-size:9px;color:var(--gray);letter-spacing:.08em;text-transform:uppercase;margin-top:3px;text-align:center}
+.date-popover{position:absolute;top:100%;left:50%;transform:translateX(-50%);margin-top:8px;background:var(--black3);border:1px solid var(--br2);border-radius:var(--r);padding:16px;z-index:200;box-shadow:0 8px 32px rgba(0,0,0,.6);min-width:260px}
+.date-popover label{font-size:11px;color:var(--gray);letter-spacing:.1em;text-transform:uppercase;display:block;margin-bottom:6px}
+.date-popover input[type=date]{width:100%;background:var(--black4);border:1px solid var(--gray2);border-radius:6px;color:var(--white);font-family:var(--fb);font-size:13px;padding:8px 12px;outline:none;transition:border-color .15s;color-scheme:dark}
+.date-popover input[type=date]:focus{border-color:var(--yellow)}
+.date-popover-hint{font-size:10px;color:var(--gray2);margin-top:6px;line-height:1.5}
+.dp-apply{margin-top:10px;width:100%;background:var(--yellow);color:var(--black);border:none;border-radius:6px;font-family:var(--fb);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:8px;cursor:pointer;transition:background .15s}
+.dp-apply:hover{background:var(--yellow2)}
+.week-mid-wrap{position:relative}
+.hdr-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
 .tinfo{text-align:right;font-size:11px;line-height:1.7;color:var(--gray)}
 .tinfo strong{color:var(--white);font-weight:600}
-.tinfo .next-slots{font-size:10px;color:var(--gray2)}
+.next-badge{display:inline-flex;align-items:center;gap:6px;background:var(--black3);border:1px solid var(--br2);border-radius:20px;padding:4px 12px;font-size:10px;color:var(--gray);letter-spacing:.06em}
+.next-badge .dot{width:5px;height:5px;background:var(--yellow);border-radius:50%;flex-shrink:0;animation:blink 1.5s ease infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
 .btn{display:inline-flex;align-items:center;gap:6px;font-family:var(--fb);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:9px 16px;border-radius:6px;border:none;cursor:pointer;transition:all .18s;white-space:nowrap}
 .btn-y{background:var(--yellow);color:var(--black)}
 .btn-y:hover{background:var(--yellow2);transform:translateY(-1px)}
 .btn-y:disabled{opacity:.4;cursor:not-allowed;transform:none}
 
-/* PRÓXIMA ATUALIZAÇÃO BADGE */
-.next-badge{display:inline-flex;align-items:center;gap:6px;background:var(--black3);border:1px solid var(--br2);border-radius:20px;padding:4px 12px;font-size:10px;color:var(--gray);letter-spacing:.06em}
-.next-badge .dot{width:5px;height:5px;background:var(--yellow);border-radius:50%;animation:blink 1.5s ease infinite}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
-
-/* CONFIG */
+/* ── CONFIG ── */
 .cfg{display:flex;gap:14px;align-items:flex-start;background:var(--black3);border:1px solid rgba(245,230,66,.25);border-radius:var(--r);padding:18px 20px;margin-bottom:20px}
 .cfg-icon{font-size:20px;flex-shrink:0;margin-top:1px}
 .cfg-body{flex:1;min-width:0}
@@ -61,14 +78,14 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
 .ifield:focus{border-color:var(--yellow)}
 .ifield::placeholder{color:var(--gray2)}
 
-/* ERROR / LOADING */
+/* ── ERROR / LOADING ── */
 .errbox{background:var(--danger-d);border:1px solid rgba(239,68,68,.25);border-radius:var(--r);padding:12px 16px;font-size:12px;color:#FCA5A5;margin-bottom:18px}
 .loading{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 20px;gap:14px}
 .spin{width:32px;height:32px;border:2.5px solid var(--black4);border-top-color:var(--yellow);border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .ltxt{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--gray)}
 
-/* STATS */
+/* ── STATS ── */
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--g);margin-bottom:var(--g)}
 .sc{background:var(--black2);border:1px solid var(--br);border-radius:var(--r);padding:16px 18px;position:relative;overflow:hidden}
 .sc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:var(--r) var(--r) 0 0}
@@ -77,47 +94,96 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
 .sc.ok .sn{color:var(--ok)}.sc.wn .sn{color:var(--warn)}.sc.in .sn{color:var(--info)}.sc.br .sn{color:var(--yellow)}
 .sl{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--gray);font-weight:500}
 
-/* PROGRESS */
+/* ── PROGRESS ── */
 .prog{background:var(--black2);border:1px solid var(--br);border-radius:var(--r);padding:14px 18px;margin-bottom:var(--g);display:flex;align-items:center;gap:14px}
 .plbl{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--gray);font-weight:500;white-space:nowrap;flex-shrink:0}
 .ptrack{flex:1;height:6px;background:var(--black4);border-radius:6px;overflow:hidden}
 .pfill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--purple),var(--yellow));transition:width 1.2s cubic-bezier(.4,0,.2,1)}
 .ppct{font-family:var(--fd);font-size:24px;letter-spacing:.04em;color:var(--yellow);flex-shrink:0;min-width:54px;text-align:right}
 
-/* LEGEND */
-.legend{display:flex;flex-wrap:wrap;gap:12px 20px;margin-bottom:var(--g)}
+/* ── LEGEND STATUS ── */
+.legend{display:flex;flex-wrap:wrap;gap:8px 20px;margin-bottom:var(--g);align-items:center}
 .leg{display:flex;align-items:center;gap:6px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--gray);font-weight:500}
 .ldot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.legend-sep{width:1px;height:14px;background:var(--br2);flex-shrink:0}
 
-/* GRID */
+/* ── CLIENT GRID ── */
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--g)}
 .card{background:var(--black2);border:1px solid var(--br);border-radius:var(--r);padding:14px 16px;transition:border-color .18s}
 .card:hover{border-color:var(--br2)}
-.chead{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:10px}
+.chead{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:12px}
 .cname{font-size:13px;font-weight:700;line-height:1.3}
 .cresp{font-size:10px;color:var(--gray);margin-top:2px}
 .cpct{font-family:var(--fd);font-size:16px;letter-spacing:.04em;padding:2px 9px;border-radius:20px;flex-shrink:0;white-space:nowrap}
 .p100{background:var(--ok-d);color:var(--ok)}.phi{background:rgba(245,230,66,.08);color:var(--yellow)}.pmid{background:var(--warn-d);color:var(--warn)}.plow{background:var(--danger-d);color:#FCA5A5}
-.cbar{height:2px;background:var(--black4);border-radius:2px;overflow:hidden;margin-bottom:10px}
+.cbar{height:2px;background:var(--black4);border-radius:2px;overflow:hidden;margin-bottom:12px}
 .cfill{height:100%;border-radius:2px;transition:width .9s cubic-bezier(.4,0,.2,1)}
 .f100{background:var(--ok)}.fhi{background:var(--yellow)}.fmid{background:var(--warn)}.flow{background:var(--danger)}
-.pills{display:flex;flex-wrap:wrap;gap:4px}
-.pill{font-size:10px;font-weight:600;padding:3px 7px;border-radius:4px;white-space:nowrap;letter-spacing:.02em}
-.pok{background:var(--ok-d);color:#86efac}.pdes{background:var(--warn-d);color:#FCD34D}.papr{background:var(--info-d);color:var(--info)}.ppln{background:var(--pink-d);color:var(--pink)}
 
-/* FOOTER */
+/* ── TIPO DE CONTEÚDO ── */
+.tipo-group{margin-bottom:8px}
+.tipo-group:last-child{margin-bottom:0}
+.tipo-header{display:flex;align-items:center;gap:6px;margin-bottom:5px}
+.tipo-icon{font-size:11px;line-height:1}
+.tipo-label{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.tipo-count{font-size:9px;color:var(--gray);margin-left:2px}
+
+.tipo-feed .tipo-label{color:var(--feed-color)}
+.tipo-stories .tipo-label{color:var(--stories-color)}
+.tipo-extra .tipo-label{color:var(--extra-color)}
+.tipo-tiktok .tipo-label{color:var(--tiktok-color)}
+.tipo-outros .tipo-label{color:var(--outros-color)}
+
+.pills{display:flex;flex-wrap:wrap;gap:4px}
+.pill{font-size:10px;font-weight:600;padding:3px 7px;border-radius:4px;white-space:nowrap;letter-spacing:.02em;cursor:pointer;transition:all .15s;border:1px solid transparent}
+.pill:hover{transform:translateY(-1px);filter:brightness(1.2);border-color:rgba(255,255,255,.15)}
+
+/* Pílulas por status */
+.pok{background:var(--ok-d);color:#86efac}
+.pdes{background:var(--warn-d);color:#FCD34D}
+.papr{background:var(--info-d);color:var(--info)}
+.ppln{background:var(--pink-d);color:var(--pink)}
+
+/* ── MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px);animation:fadeIn .15s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.modal{background:var(--black3);border:1px solid var(--br2);border-radius:14px;width:100%;max-width:500px;overflow:hidden;animation:slideUp .2s ease;max-height:90dvh;display:flex;flex-direction:column}
+@keyframes slideUp{from{transform:translateY(16px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-header{padding:18px 20px 14px;border-bottom:1px solid var(--br);display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-shrink:0}
+.modal-tipo-tag{display:inline-flex;align-items:center;gap:5px;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:2px 8px;border-radius:10px;margin-bottom:6px}
+.modal-title{font-size:15px;font-weight:700;color:var(--white);line-height:1.3}
+.modal-close{background:var(--black4);border:1px solid var(--br2);color:var(--gray);width:28px;height:28px;border-radius:6px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s}
+.modal-close:hover{color:var(--white);border-color:var(--white)}
+.modal-body{padding:16px 20px;overflow-y:auto;flex:1}
+.modal-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--br)}
+.modal-row:last-child{border-bottom:none}
+.modal-key{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--gray);font-weight:500}
+.modal-val{font-size:12px;font-weight:600;color:var(--white);text-align:right;max-width:60%}
+.status-badge{display:inline-block;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;letter-spacing:.04em;text-transform:uppercase}
+.modal-subs{margin-top:14px}
+.modal-subs-title{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--gray);font-weight:500;margin-bottom:8px}
+.sub-item{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:var(--black4);border-radius:6px;margin-bottom:4px;gap:8px}
+.sub-item:last-child{margin-bottom:0}
+.sub-name{font-size:11px;color:var(--white);font-weight:500;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sub-status{font-size:9px;font-weight:700;padding:2px 7px;border-radius:10px;letter-spacing:.04em;text-transform:uppercase;flex-shrink:0}
+.modal-footer{padding:14px 20px;border-top:1px solid var(--br);display:flex;gap:8px;flex-shrink:0}
+.btn-clickup{flex:1;background:var(--purple);color:white;border:none;border-radius:6px;font-family:var(--fb);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:9px;cursor:pointer;transition:background .15s;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:6px}
+.btn-clickup:hover{background:#6025C0}
+.btn-modal-close{background:var(--black4);color:var(--gray);border:1px solid var(--br2);border-radius:6px;font-family:var(--fb);font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:9px 14px;cursor:pointer;transition:all .15s}
+.btn-modal-close:hover{color:var(--white);border-color:var(--white)}
+
+/* ── FOOTER ── */
 .footer{margin-top:22px;padding-top:14px;border-top:1px solid var(--br);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;font-size:10px;letter-spacing:.04em;color:var(--gray2)}
 .pdot{display:inline-block;width:5px;height:5px;background:var(--ok);border-radius:50%;margin-right:5px;vertical-align:middle;animation:pa 2s ease infinite}
 @keyframes pa{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.7)}}
 
-/* TABLET */
+/* ── RESPONSIVE ── */
 @media(max-width:960px){
   .grid{grid-template-columns:repeat(2,1fr)}
   .stats{grid-template-columns:repeat(2,1fr)}
   .hdr{grid-template-columns:auto auto}
   .hdr-mid,.tinfo{display:none}
 }
-/* MOBILE */
 @media(max-width:600px){
   .page{padding:14px 14px 24px}
   :root{--g:10px}
@@ -136,27 +202,29 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
   .cfg{flex-direction:column}
   .irow{flex-direction:column}
   .btn-y{width:100%;justify-content:center}
-  .legend{gap:8px 14px}
+  .legend{gap:6px 14px}
   .next-badge{font-size:9px;padding:3px 9px}
+  .modal{max-width:100%}
+  .legend-sep{display:none}
 }
-/* TV */
 @media(min-width:1600px){
   .page{padding:28px 48px 36px}
   :root{--g:18px}
   .logo{font-size:36px}
-  .week{font-size:24px}
   .sn{font-size:52px}
   .sc{padding:20px 24px}
   .grid{grid-template-columns:repeat(4,1fr)}
   .cname{font-size:14px}
   .pill{font-size:11px;padding:4px 9px}
   .ppct{font-size:28px;min-width:64px}
+  .week-label-btn{font-size:20px}
 }
 </style>
 </head>
 <body>
 <main class="page">
 
+<!-- HEADER -->
 <header class="hdr">
   <div class="brand">
     <div class="logo">DUA<em>.</em></div>
@@ -164,21 +232,32 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
   </div>
   <div class="hdr-mid">
     <div class="eyebrow">Painel de Produção</div>
-    <div class="week" id="week-label">—</div>
+    <div class="week-mid-wrap">
+      <div class="week-selector">
+        <button class="week-nav" onclick="changeWeek(-1)" title="Semana anterior">‹</button>
+        <button class="week-label-btn" id="week-label" onclick="toggleDatePicker()">—</button>
+        <button class="week-nav" onclick="changeWeek(1)" title="Próxima semana">›</button>
+      </div>
+      <div class="week-sub">clique na data para escolher a semana</div>
+      <div class="date-popover" id="date-popover" style="display:none">
+        <label>Escolha qualquer data da semana</label>
+        <input type="date" id="date-picker"/>
+        <div class="date-popover-hint">O sistema vai encontrar a semana (ter→seg) que contém essa data.</div>
+        <button class="dp-apply" onclick="applyDatePicker()">Aplicar semana</button>
+      </div>
+    </div>
   </div>
   <div class="hdr-right">
     <div class="tinfo">
       <strong id="last-update">—</strong><br>
-      <span class="next-slots">Próxima: <span id="next-slot">—</span></span>
+      <span style="font-size:10px;color:var(--gray2)">Próxima: <span id="next-slot">—</span></span>
     </div>
-    <div class="next-badge" id="countdown-badge">
-      <span class="dot"></span>
-      <span id="countdown">—</span>
-    </div>
+    <div class="next-badge"><span class="dot"></span><span id="countdown">—</span></div>
     <button class="btn btn-y" id="btn-ref" onclick="loadData()">↻ Atualizar</button>
   </div>
 </header>
 
+<!-- CONFIG -->
 <div class="cfg" id="cfg">
   <div class="cfg-icon">🔑</div>
   <div class="cfg-body">
@@ -192,7 +271,6 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
 </div>
 
 <div class="errbox" id="errbox" style="display:none"></div>
-
 <div class="loading" id="loadbox" style="display:none">
   <div class="spin"></div>
   <div class="ltxt">Buscando dados do ClickUp…</div>
@@ -205,20 +283,24 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
     <div class="sc in"><div class="sn" id="s-tot">—</div><div class="sl">Total (excl. templates)</div></div>
     <div class="sc br"><div class="sn" id="s-pct">—</div><div class="sl">Taxa de entrega</div></div>
   </div>
-
   <div class="prog">
     <div class="plbl">Progresso geral da semana</div>
     <div class="ptrack"><div class="pfill" id="pfill" style="width:0%"></div></div>
     <div class="ppct" id="ppct">0%</div>
   </div>
-
   <div class="legend">
-    <div class="leg"><div class="ldot" style="background:#86efac"></div>Agendamento / Concluído</div>
+    <!-- Status -->
+    <div class="leg"><div class="ldot" style="background:#86efac"></div>Agendamento</div>
     <div class="leg"><div class="ldot" style="background:#FCD34D"></div>Design</div>
     <div class="leg"><div class="ldot" style="background:var(--info)"></div>Em aprovação</div>
     <div class="leg"><div class="ldot" style="background:var(--pink)"></div>Planejamento</div>
+    <div class="legend-sep"></div>
+    <!-- Tipos -->
+    <div class="leg"><div class="ldot" style="background:var(--feed-color)"></div>Feed</div>
+    <div class="leg"><div class="ldot" style="background:var(--stories-color)"></div>Stories</div>
+    <div class="leg"><div class="ldot" style="background:var(--extra-color)"></div>Demanda extra</div>
+    <div class="leg"><div class="ldot" style="background:var(--tiktok-color)"></div>TikTok</div>
   </div>
-
   <div class="grid" id="cgrid"></div>
 </div>
 
@@ -228,10 +310,53 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
   <span id="ftime">—</span>
 </footer>
 
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay" style="display:none" onclick="closeModalOutside(event)">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-tipo-tag" id="modal-tipo-tag">—</div>
+        <div class="modal-title" id="modal-title">—</div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-row">
+        <span class="modal-key">Cliente</span>
+        <span class="modal-val" id="modal-client">—</span>
+      </div>
+      <div class="modal-row">
+        <span class="modal-key">Data</span>
+        <span class="modal-val" id="modal-date">—</span>
+      </div>
+      <div class="modal-row">
+        <span class="modal-key">Status</span>
+        <span class="modal-val"><span class="status-badge" id="modal-status">—</span></span>
+      </div>
+      <div class="modal-row">
+        <span class="modal-key">Responsável</span>
+        <span class="modal-val" id="modal-resp">—</span>
+      </div>
+      <div class="modal-row">
+        <span class="modal-key">Tarefa pai</span>
+        <span class="modal-val" id="modal-parent">—</span>
+      </div>
+      <div class="modal-subs" id="modal-subs-wrap" style="display:none">
+        <div class="modal-subs-title">Subtarefas deste dia</div>
+        <div id="modal-subs-list"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <a class="btn-clickup" id="modal-link" href="#" target="_blank" rel="noopener">Abrir no ClickUp ↗</a>
+      <button class="btn-modal-close" onclick="closeModal()">Fechar</button>
+    </div>
+  </div>
+</div>
+
 </main>
 <script>
 /* =============================================
-   CONFIGURAÇÃO
+   CLIENTES
    ============================================= */
 const CLIENTES=[
   {nome:'Andirá Jeans',listId:'901324614041',resp:'Alexia + Isadora'},
@@ -249,18 +374,39 @@ const CLIENTES=[
 
 const OK=['agendamento','concluído','concluido','complete','done'];
 const SKIP=['template','templates'];
-
-// Horários fixos de atualização (hora, minuto)
 const SCHEDULES=[[8,0],[10,0],[12,0],[16,0],[17,30]];
 
 let key=localStorage.getItem('dua_k')||'';
 let schedTimer=null;
+let weekOffset=0;
+let customBaseDate=null;
+
+/* =============================================
+   DETECTAR TIPO DE CONTEÚDO
+   ============================================= */
+function detectTipo(parentName,taskName){
+  const src=(parentName||taskName||'').toLowerCase();
+  if(src.includes('tiktok')) return 'tiktok';
+  if(src.includes('feed'))   return 'feed';
+  if(src.includes('stories')||src.includes('storie')) return 'stories';
+  if(src.includes('demanda extra')||src.includes('demanda_extra')) return 'extra';
+  if(src.includes('audiovisual')||src.includes('edição')||src.includes('edicao')) return 'extra';
+  return 'outros';
+}
+
+const TIPO_META={
+  feed:    {icon:'🖼️', label:'Feed',         cls:'tipo-feed',    tagBg:'var(--feed-bg)',    tagColor:'var(--feed-color)',    tagBorder:'var(--feed-border)'},
+  stories: {icon:'📱', label:'Stories',      cls:'tipo-stories', tagBg:'var(--stories-bg)', tagColor:'var(--stories-color)', tagBorder:'var(--stories-border)'},
+  extra:   {icon:'⚡', label:'Demanda extra', cls:'tipo-extra',   tagBg:'var(--extra-bg)',   tagColor:'var(--extra-color)',   tagBorder:'var(--extra-border)'},
+  tiktok:  {icon:'🎵', label:'TikTok',       cls:'tipo-tiktok',  tagBg:'var(--tiktok-bg)',  tagColor:'var(--tiktok-color)',  tagBorder:'var(--tiktok-border)'},
+  outros:  {icon:'📌', label:'Outros',       cls:'tipo-outros',  tagBg:'var(--outros-bg)',  tagColor:'var(--outros-color)',  tagBorder:'var(--outros-border)'},
+};
 
 /* =============================================
    INIT
    ============================================= */
 window.addEventListener('DOMContentLoaded',()=>{
-  setWkLabel();
+  updateWeekLabel();
   if(key){
     $('api-in').value=key;
     hide('cfg');
@@ -268,95 +414,92 @@ window.addEventListener('DOMContentLoaded',()=>{
   }
   setInterval(tick,1000);
   scheduleNext();
+  document.addEventListener('click',e=>{
+    const pop=$('date-popover'),btn=$('week-label');
+    if(pop.style.display!=='none'&&!pop.contains(e.target)&&e.target!==btn)
+      pop.style.display='none';
+  });
 });
 
 function saveKey(){
-  const v=$('api-in').value.trim();
-  if(!v)return;
-  key=v;
-  localStorage.setItem('dua_k',v);
-  hide('cfg');
-  loadData();
-  scheduleNext();
+  const v=$('api-in').value.trim();if(!v)return;
+  key=v;localStorage.setItem('dua_k',v);
+  hide('cfg');loadData();scheduleNext();
 }
 
 /* =============================================
-   SEMANA: TERÇA → SEGUNDA
+   SEMANA TERÇA → SEGUNDA
    ============================================= */
-function getWeek(){
-  const now=new Date();
-  const d=now.getDay(); // 0=dom,1=seg,2=ter,...,6=sab
-
-  // Encontrar a terça mais recente (ou hoje se for terça)
-  // ter=2, se hoje é ter(2) diff=0; seg(1) diff=-6; dom(0) diff=-5; sab(6) diff=-4; sex(5) diff=-3; qui(4) diff=-2; qua(3) diff=-1
-  const diffToTer = d===2 ? 0 : d>2 ? -(d-2) : -(7-(2-d));
-
-  const ter=new Date(now);
-  ter.setDate(now.getDate()+diffToTer);
-  ter.setHours(0,0,0,0);
-
+function getWeekFromDate(base){
+  const d=base.getDay();
+  const diffToTer=d===2?0:d>2?-(d-2):-(7-(2-d));
+  const ter=new Date(base);
+  ter.setDate(base.getDate()+diffToTer);ter.setHours(0,0,0,0);
   const seg=new Date(ter);
-  seg.setDate(ter.getDate()+6);
-  seg.setHours(23,59,59,999);
-
+  seg.setDate(ter.getDate()+6);seg.setHours(23,59,59,999);
   return{ter,seg};
+}
+
+function getActiveWeek(){
+  const base=customBaseDate?new Date(customBaseDate):new Date();
+  const bo=new Date(base);bo.setDate(base.getDate()+(weekOffset*7));
+  return getWeekFromDate(bo);
 }
 
 const fmt=d=>d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'});
 const fmtw=d=>d.toLocaleDateString('pt-BR',{weekday:'short'}).replace('.','').toLowerCase();
 
-function setWkLabel(){
-  const{ter,seg}=getWeek();
-  $('week-label').textContent=`Semana ${fmt(ter)} (ter) → ${fmt(seg)} (seg)`;
+function updateWeekLabel(){
+  const{ter,seg}=getActiveWeek();
+  $('week-label').textContent=`${fmt(ter)} → ${fmt(seg)}`;
+}
+
+function changeWeek(dir){
+  weekOffset+=dir;customBaseDate=null;
+  updateWeekLabel();if(key)loadData();
+}
+
+function toggleDatePicker(){
+  const pop=$('date-popover');
+  if(pop.style.display==='none'){
+    const{ter}=getActiveWeek();
+    const y=ter.getFullYear(),m=String(ter.getMonth()+1).padStart(2,'0'),d=String(ter.getDate()).padStart(2,'0');
+    $('date-picker').value=`${y}-${m}-${d}`;
+    pop.style.display='block';
+  }else{pop.style.display='none';}
+}
+
+function applyDatePicker(){
+  const val=$('date-picker').value;if(!val)return;
+  const[y,m,d]=val.split('-').map(Number);
+  customBaseDate=new Date(y,m-1,d,12,0,0);
+  weekOffset=0;
+  $('date-popover').style.display='none';
+  updateWeekLabel();if(key)loadData();
 }
 
 /* =============================================
-   AGENDAMENTO POR HORÁRIOS FIXOS
+   HORÁRIOS FIXOS
    ============================================= */
 function getNextSlot(){
-  const now=new Date();
-  const hm=now.getHours()*60+now.getMinutes();
-
+  const now=new Date(),hm=now.getHours()*60+now.getMinutes();
   for(const[h,m] of SCHEDULES){
-    const slotMin=h*60+m;
-    if(slotMin>hm){
-      const next=new Date(now);
-      next.setHours(h,m,0,0);
-      return next;
-    }
+    if(h*60+m>hm){const n=new Date(now);n.setHours(h,m,0,0);return n;}
   }
-  // Passou de todos hoje — próximo é amanhã 08:00
-  const next=new Date(now);
-  next.setDate(next.getDate()+1);
-  next.setHours(8,0,0,0);
-  return next;
+  const n=new Date(now);n.setDate(n.getDate()+1);n.setHours(8,0,0,0);return n;
 }
 
 function scheduleNext(){
   if(schedTimer)clearTimeout(schedTimer);
-  const next=getNextSlot();
-  const ms=next.getTime()-Date.now();
-  schedTimer=setTimeout(()=>{
-    loadData();
-    scheduleNext(); // reagendar para o próximo slot
-  },ms);
+  const next=getNextSlot(),ms=next.getTime()-Date.now();
+  schedTimer=setTimeout(()=>{loadData();scheduleNext();},ms);
 }
 
 function tick(){
-  const next=getNextSlot();
-  const diff=Math.max(0,next.getTime()-Date.now());
-  const h=Math.floor(diff/3600000);
-  const m=Math.floor((diff%3600000)/60000);
-  const s=Math.floor((diff%60000)/1000);
-
-  const slotStr=next.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
-  set('next-slot',slotStr);
-
-  if(h>0){
-    set('countdown',`${h}h ${String(m).padStart(2,'0')}min`);
-  }else{
-    set('countdown',`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`);
-  }
+  const next=getNextSlot(),diff=Math.max(0,next.getTime()-Date.now());
+  const h=Math.floor(diff/3600000),m=Math.floor((diff%3600000)/60000),s=Math.floor((diff%60000)/1000);
+  set('next-slot',next.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}));
+  set('countdown',h>0?`${h}h ${String(m).padStart(2,'0')}min`:`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`);
 }
 
 /* =============================================
@@ -377,16 +520,30 @@ async function getSubs(lid,ter,seg){
   for(const t of tasks){
     const st=(t.status?.status||'').toLowerCase();
     if(SKIP.some(x=>st.includes(x)))continue;
+    const tipo=detectTipo(t.name,t.name);
     if(t.subtasks?.length){
       for(const sub of t.subtasks){
         const ss=(sub.status?.status||'').toLowerCase();
         if(SKIP.some(x=>ss.includes(x)))continue;
         const due=parseInt(sub.due_date||0);
-        if(due>=ter.getTime()&&due<=seg.getTime())
-          out.push({status:ss,due});
+        if(due>=ter.getTime()&&due<=seg.getTime()){
+          out.push({
+            id:sub.id,name:sub.name,status:ss,due,
+            tipo,
+            parentName:t.name,parentId:t.id,
+            url:sub.url||`https://app.clickup.com/t/${sub.id}`,
+            assignees:(sub.assignees||[]).map(a=>a.username||a.email).join(', ')
+          });
+        }
       }
     }else{
-      out.push({status:st,due:parseInt(t.due_date||0)});
+      out.push({
+        id:t.id,name:t.name,status:st,due:parseInt(t.due_date||0),
+        tipo,
+        parentName:null,parentId:null,
+        url:t.url||`https://app.clickup.com/t/${t.id}`,
+        assignees:(t.assignees||[]).map(a=>a.username||a.email).join(', ')
+      });
     }
   }
   return out;
@@ -397,15 +554,11 @@ async function getSubs(lid,ter,seg){
    ============================================= */
 async function loadData(){
   if(!key)return;
-  const btn=$('btn-ref');
-  btn.disabled=true;btn.textContent='↻ Aguarde…';
+  const btn=$('btn-ref');btn.disabled=true;btn.textContent='↻ Aguarde…';
   hide('errbox');show('loadbox');hide('dash');
-
   try{
-    const{ter,seg}=getWeek();
-    let ok=0,pnd=0;
-    const cards=[];
-
+    const{ter,seg}=getActiveWeek();
+    let ok=0,pnd=0;const cards=[];
     for(const c of CLIENTES){
       try{
         const subs=await getSubs(c.listId,ter,seg);
@@ -417,31 +570,22 @@ async function loadData(){
           tot:subs.length,pct:Math.round((o.length/subs.length)*100)});
       }catch(e){console.warn(c.nome,e);}
     }
-
-    const tot=ok+pnd;
-    const pct=tot?Math.round((ok/tot)*100):0;
-
+    const tot=ok+pnd,pct=tot?Math.round((ok/tot)*100):0;
     set('s-ok',ok);set('s-pnd',pnd);set('s-tot',tot);set('s-pct',pct+'%');set('ppct',pct+'%');
     setTimeout(()=>{$('pfill').style.width=pct+'%';},80);
-
     render(cards);
-
     const now=new Date();
     set('last-update',now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}));
     set('conn','Conectado ao ClickUp');
     set('ftime',now.toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}));
-    setWkLabel();
-
+    updateWeekLabel();
     hide('loadbox');show('dash');
-
   }catch(err){
     hide('loadbox');
-    const eb=$('errbox');
-    eb.style.display='block';
+    const eb=$('errbox');eb.style.display='block';
     eb.textContent=`Erro: ${err.message} — Verifique a API Key.`;
     set('conn','Erro de conexão');
   }
-
   btn.disabled=false;btn.textContent='↻ Atualizar';
 }
 
@@ -451,43 +595,141 @@ async function loadData(){
 function render(cards){
   cards.sort((a,b)=>a.pct-b.pct);
   const g=$('cgrid');g.innerHTML='';
+  const ORDER=['feed','stories','tiktok','extra','outros'];
 
   for(const c of cards){
     const[pc,fc]=
-      c.pct===100?['p100','f100']:
-      c.pct>=80?['phi','fhi']:
-      c.pct>=50?['pmid','fmid']:['plow','flow'];
+      c.pct===100?['p100','f100']:c.pct>=80?['phi','fhi']:c.pct>=50?['pmid','fmid']:['plow','flow'];
 
-    const days={};
+    // Agrupar por tipo, depois por dia dentro de cada tipo
+    const byTipo={};
     for(const s of c.subs){
-      const d=new Date(s.due),k=fmt(d);
-      if(!days[k])days[k]={lbl:`${fmt(d)} ${fmtw(d)}`,ss:[]};
-      days[k].ss.push(s.status);
+      const t=s.tipo;
+      if(!byTipo[t])byTipo[t]=[];
+      byTipo[t].push(s);
     }
 
-    const ph=Object.values(days).map(({lbl,ss})=>{
-      const aok=ss.every(s=>OK.some(e=>s.includes(e)));
-      const des=ss.some(s=>s.includes('design'));
-      const apr=ss.some(s=>s.includes('aprov'));
-      const cls=aok?'pok':des?'pdes':apr?'papr':'ppln';
-      return`<span class="pill ${cls}">${lbl}${aok?' ✓':''}</span>`;
-    }).join('');
+    // Montar HTML dos grupos de tipo
+    let tiposHtml='';
+    for(const tipo of ORDER){
+      if(!byTipo[tipo])continue;
+      const subs=byTipo[tipo];
+      const meta=TIPO_META[tipo];
+
+      // Agrupar por dia dentro deste tipo
+      const byDay={};
+      for(const s of subs){
+        const d=new Date(s.due),k=fmt(d);
+        if(!byDay[k])byDay[k]={lbl:`${fmt(d)} ${fmtw(d)}`,subs:[]};
+        byDay[k].subs.push(s);
+      }
+
+      // Contar entregues neste tipo
+      const okCount=subs.filter(s=>OK.some(e=>s.status.includes(e))).length;
+      const totalCount=subs.length;
+
+      const pillsHtml=Object.values(byDay).map(({lbl,subs:ds})=>{
+        const aok=ds.every(s=>OK.some(e=>s.status.includes(e)));
+        const des=ds.some(s=>s.status.includes('design'));
+        const apr=ds.some(s=>s.status.includes('aprov'));
+        const cls=aok?'pok':des?'pdes':apr?'papr':'ppln';
+        const data=encodeURIComponent(JSON.stringify({
+          cliente:c.nome,resp:c.resp,dia:lbl,tipo,
+          subs:ds.map(s=>({id:s.id,name:s.name,status:s.status,
+            parentName:s.parentName,url:s.url,assignees:s.assignees,due:s.due}))
+        }));
+        return`<span class="pill ${cls}" onclick="openModal('${data}')">${lbl}${aok?' ✓':''}</span>`;
+      }).join('');
+
+      tiposHtml+=`
+        <div class="tipo-group ${meta.cls}">
+          <div class="tipo-header">
+            <span class="tipo-icon">${meta.icon}</span>
+            <span class="tipo-label">${meta.label}</span>
+            <span class="tipo-count">${okCount}/${totalCount}</span>
+          </div>
+          <div class="pills">${pillsHtml}</div>
+        </div>`;
+    }
 
     const el=document.createElement('div');el.className='card';
     el.innerHTML=`
       <div class="chead">
-        <div>
-          <div class="cname">${c.nome}</div>
-          <div class="cresp">${c.resp}</div>
-        </div>
+        <div><div class="cname">${c.nome}</div><div class="cresp">${c.resp}</div></div>
         <div class="cpct ${pc}">${c.pct}%</div>
       </div>
       <div class="cbar"><div class="cfill ${fc}" style="width:${c.pct}%"></div></div>
-      <div class="pills">${ph||'<span style="color:var(--gray2);font-size:10px">Sem subtarefas</span>'}</div>
+      ${tiposHtml||'<span style="color:var(--gray2);font-size:10px">Sem subtarefas</span>'}
     `;
     g.appendChild(el);
   }
 }
+
+/* =============================================
+   MODAL
+   ============================================= */
+function openModal(dataEncoded){
+  const data=JSON.parse(decodeURIComponent(dataEncoded));
+  const{cliente,resp,dia,tipo,subs}=data;
+  const meta=TIPO_META[tipo]||TIPO_META.outros;
+
+  // Tipo tag
+  const tag=$('modal-tipo-tag');
+  tag.textContent=`${meta.icon} ${meta.label}`;
+  tag.style.background=meta.tagBg;
+  tag.style.color=meta.tagColor;
+  tag.style.border=`1px solid ${meta.tagBorder}`;
+
+  set('modal-client',cliente);
+  set('modal-date',dia);
+  set('modal-resp',resp);
+
+  // Título
+  set('modal-title',subs.length===1?subs[0].name:`${subs.length} subtarefas — ${dia}`);
+
+  // Status dominante
+  const allOk=subs.every(s=>OK.some(e=>s.status.includes(e)));
+  const anyDes=subs.some(s=>s.status.includes('design'));
+  const anyApr=subs.some(s=>s.status.includes('aprov'));
+  const domStatus=allOk?'agendamento':anyDes?'design':anyApr?'em aprovação':'planejamento';
+  const statusEl=$('modal-status');
+  statusEl.textContent=domStatus.toUpperCase();
+  statusEl.style.background=allOk?'var(--ok-d)':anyDes?'var(--warn-d)':anyApr?'var(--info-d)':'var(--pink-d)';
+  statusEl.style.color=allOk?'var(--ok)':anyDes?'#FCD34D':anyApr?'var(--info)':'var(--pink)';
+
+  // Tarefa pai
+  const parents=[...new Set(subs.map(s=>s.parentName).filter(Boolean))];
+  set('modal-parent',parents.length?parents.join(', '):'—');
+
+  // Lista de subs
+  const wrap=$('modal-subs-wrap'),list=$('modal-subs-list');
+  if(subs.length>1){
+    wrap.style.display='block';
+    list.innerHTML=subs.map(s=>{
+      const sok=OK.some(e=>s.status.includes(e));
+      const sdes=s.status.includes('design');
+      const sapr=s.status.includes('aprov');
+      const bg=sok?'var(--ok-d)':sdes?'var(--warn-d)':sapr?'var(--info-d)':'var(--pink-d)';
+      const cl=sok?'var(--ok)':sdes?'#FCD34D':sapr?'var(--info)':'var(--pink)';
+      return`<div class="sub-item">
+        <span class="sub-name">${s.name}</span>
+        <span class="sub-status" style="background:${bg};color:${cl}">${s.status}</span>
+      </div>`;
+    }).join('');
+  }else{wrap.style.display='none';}
+
+  $('modal-link').href=subs[0].url||'#';
+  $('modal-overlay').style.display='flex';
+  document.body.style.overflow='hidden';
+}
+
+function closeModal(){
+  $('modal-overlay').style.display='none';
+  document.body.style.overflow='';
+}
+
+function closeModalOutside(e){if(e.target===$('modal-overlay'))closeModal();}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
 
 /* =============================================
    UTILS
