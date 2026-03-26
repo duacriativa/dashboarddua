@@ -452,123 +452,61 @@ async function apiGet(path){
 }
 
 /* =============================================
-   BUSCA CORRETA DE SUBTAREFAS
-   ─────────────────────────────────────────────
-   PASSO 1: Busca TODAS as tarefas da lista
-             (sem filtro de due_date — o filtro
-             na API se aplica só à tarefa mãe,
-             não às subtarefas filhas)
-
-   PASSO 2: Para cada tarefa que tem subtarefas,
-             busca as subtarefas individualmente
-             via /task/:id?include_subtasks=true
-
-   PASSO 3: Filtra as subtarefas pelo due_date
-             aqui no JavaScript
-
-   Isso garante que TODAS as subtarefas dentro
-   da semana apareçam, independente da data
-   da tarefa mãe.
+   BUSCA DE SUBTAREFAS
    ============================================= */
-// ID do campo customizado "Data" do ClickUp
-const CAMPO_DATA_ID='fa602b35-eaf5-47a2-b24a-97b0be692763';
-
-// Extrai o valor do campo customizado "Data" de uma tarefa
-// Retorna o timestamp em ms, ou null se não tiver
-function getCampoData(task){
-  const cf=(task.custom_fields||[]).find(f=>f.id===CAMPO_DATA_ID);
-  if(cf&&cf.value){
-    const v=parseInt(cf.value);
-    if(!isNaN(v)&&v>0)return v;
-  }
-  return null;
-}
-
-// Busca os detalhes completos de uma subtarefa (com custom_fields)
-async function getSubDetalhes(subId){
-  try{
-    return await apiGet(`/task/${subId}?include_subtasks=false`);
-  }catch(e){
-    console.warn('Erro ao buscar subtarefa',subId,e);
-    return null;
-  }
-}
-
 async function getSubs(lid,ter,seg){
   set('loading-detail',`Buscando tarefas…`);
   const terMs=ter.getTime(),segMs=seg.getTime();
 
-  // PASSO 1: Buscar tarefas mãe e subtarefas separadamente
-  const[resMae,resSubs]=await Promise.all([
+  const[resMae,resSubs,resMaeFiltrada]=await Promise.all([
     apiGet(`/list/${lid}/task?include_closed=true&page=0`),
-    apiGet(`/list/${lid}/task?include_closed=true&subtasks=true&page=0`)
+    apiGet(`/list/${lid}/task?include_closed=true&subtasks=true&due_date_gt=${terMs}&due_date_lt=${segMs}&page=0`),
+    apiGet(`/list/${lid}/task?include_closed=true&due_date_gt=${terMs}&due_date_lt=${segMs}&page=0`)
   ]);
 
-  const maes=(resMae.tasks||[]).filter(t=>!t.parent);
-  const todasTarefas=resSubs.tasks||[];
-  const subtarefas=todasTarefas.filter(t=>!!t.parent);
-
-  // Mapear mães
+  const todasMaes=(resMae.tasks||[]).filter(t=>!t.parent);
   const maeMap={};
-  for(const t of maes) maeMap[t.id]={nome:t.name,tipo:detectTipo(t.name)};
+  for(const t of todasMaes) maeMap[t.id]={nome:t.name,tipo:detectTipo(t.name)};
+
+  const subtarefas=(resSubs.tasks||[]).filter(t=>!!t.parent);
+  const maesNaSemana=(resMaeFiltrada.tasks||[]).filter(t=>!t.parent);
   const idsComSubs=new Set(subtarefas.map(s=>s.parent).filter(Boolean));
 
   const out=[];
   const seen=new Set();
 
-  // PASSO 2: Processar subtarefas
-  // Buscar detalhes individuais de cada sub para pegar o campo "Data"
-  set('loading-detail',`Buscando detalhes das subtarefas…`);
-  const subDetalhesPromises=subtarefas.map(s=>getSubDetalhes(s.id));
-  const subDetalhes=await Promise.all(subDetalhesPromises);
-
-  for(let i=0;i<subtarefas.length;i++){
-    const sub=subtarefas[i];
-    const det=subDetalhes[i];
+  for(const sub of subtarefas){
     const ss=(sub.status?.status||'').toLowerCase();
     if(SKIP.some(x=>ss.includes(x)))continue;
     if(seen.has(sub.id))continue;
-
-    // Usar campo "Data" customizado se disponível, senão due_date como fallback
-    const campoData=det?getCampoData(det):null;
-    const due=campoData||parseInt(sub.due_date||0);
-
-    if(!due||due<terMs||due>segMs)continue;
-
+    const due=parseInt(sub.due_date||0);
+    if(!due)continue;
     seen.add(sub.id);
     const mae=maeMap[sub.parent];
     const tipo=mae?mae.tipo:detectTipo(sub.name);
-
     out.push({
       id:sub.id,name:sub.name,status:ss,due,tipo,
       parentName:mae?mae.nome:null,parentId:sub.parent||null,
       url:sub.url||`https://app.clickup.com/t/${sub.id}`,
-      assignees:(sub.assignees||[]).map(a=>a.username||a.email).filter(Boolean).join(', '),
-      usouCampoData:!!campoData
+      assignees:(sub.assignees||[]).map(a=>a.username||a.email).filter(Boolean).join(', ')
     });
   }
 
-  // PASSO 3: Tarefas mãe SEM filhas (só para tipos != stories)
-  for(const t of maes){
+  for(const t of maesNaSemana){
     const tStatus=(t.status?.status||'').toLowerCase();
     if(SKIP.some(x=>tStatus.includes(x)))continue;
     const tipo=detectTipo(t.name);
     if(tipo==='stories')continue;
     if(idsComSubs.has(t.id))continue;
-
-    // Usar campo "Data" customizado se disponível, senão due_date
-    const campoData=getCampoData(t);
-    const due=campoData||parseInt(t.due_date||0);
-    if(!due||due<terMs||due>segMs)continue;
     if(seen.has(t.id))continue;
+    const due=parseInt(t.due_date||0);
+    if(!due)continue;
     seen.add(t.id);
-
     out.push({
       id:t.id,name:t.name,status:tStatus,due,tipo,
       parentName:null,parentId:null,
       url:t.url||`https://app.clickup.com/t/${t.id}`,
-      assignees:(t.assignees||[]).map(a=>a.username||a.email).filter(Boolean).join(', '),
-      usouCampoData:!!campoData
+      assignees:(t.assignees||[]).map(a=>a.username||a.email).filter(Boolean).join(', ')
     });
   }
 
@@ -629,7 +567,6 @@ function render(cards){
     const[pc,fc]=
       c.pct===100?['p100','f100']:c.pct>=80?['phi','fhi']:c.pct>=50?['pmid','fmid']:['plow','flow'];
 
-    // Agrupar por tipo → depois por dia
     const byTipo={};
     for(const s of c.subs){
       if(!byTipo[s.tipo])byTipo[s.tipo]=[];
@@ -643,7 +580,6 @@ function render(cards){
       const meta=TIPO_META[tipo];
       const okCount=subs.filter(s=>OK.some(e=>s.status.includes(e))).length;
 
-      // Agrupar por dia
       const byDay={};
       for(const s of subs){
         const d=new Date(s.due),k=fmt(d);
